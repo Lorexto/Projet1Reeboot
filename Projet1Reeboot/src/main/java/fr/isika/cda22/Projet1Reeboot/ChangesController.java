@@ -2,11 +2,13 @@ package fr.isika.cda22.Projet1Reeboot;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.Optional;
 
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -24,6 +26,7 @@ public class ChangesController {
 //	    Button disconnect;
 		
 		 Button btn;
+private Object label;
 		public static TextField txtNom;
 		public static TextField txtPrenom;
 		public static TextField txtDepartement;
@@ -45,7 +48,7 @@ public class ChangesController {
 			&&id!= null
 			&&annee!= null
 		) {
-		RandomAccessFile raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet_1/fichbinTEST3.bin", "rw");
+		RandomAccessFile raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet1Reeboot/fichbinTEST3.bin", "rw");
 		 nom=VueFormulaire.txtNom.getText();
 		prenom=VueFormulaire.txtPrenom.getText();
 		 dpt= VueFormulaire.txtDepartement.getText();
@@ -74,11 +77,15 @@ public class ChangesController {
 	
 
 	public static boolean Ajouter( EventHandler<? super MouseEvent> eventHandler) throws IOException{
+		
+		
+		
 		return true;
 
 	}
 
 	public static boolean Modifier( EventHandler<? super MouseEvent> eventHandler) throws IOException{
+		
 		
 		return true;
 
@@ -93,12 +100,19 @@ public static boolean Update( EventHandler<? super MouseEvent> eventHandler) thr
 	}
 
 
-public static boolean Deconnexion( EventHandler<? super MouseEvent> eventHandler) throws IOException{
+public  static boolean Deconnexion( EventHandler<? super MouseEvent> eventHandler) throws IOException{
 	System.out.println("Vous allez vous deconnecter.Etes vous sur?");
     Alert msg = new Alert(AlertType.CONFIRMATION);
     msg.setTitle("Deconnexion");
     msg.setContentText("Vous allez vous deconnecter.Etes vous sur?");
     msg.showAndWait();
+    Optional<ButtonType> option = msg.showAndWait();
+    if (option.get() == ButtonType.OK) {
+        return true;
+     } else if (option.get() == ButtonType.CANCEL) {
+      return false;
+     }
+  
 	return true;
 
 }
@@ -109,10 +123,18 @@ public static boolean Search( EventHandler<? super MouseEvent> eventHandler) thr
 	
 	return false;
 	
+}
+
+public static boolean Delete( EventHandler<? super MouseEvent> eventHandler) throws IOException{
 	
+	
+	
+	return false;
 	
 }
 
 
+
+//////////////////////////////////////////////////////////////////////////////
 
 }

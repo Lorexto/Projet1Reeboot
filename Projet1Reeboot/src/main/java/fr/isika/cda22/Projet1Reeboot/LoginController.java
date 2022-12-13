@@ -22,7 +22,7 @@ public class LoginController {
 	public static boolean loginButton(EventHandler<? super MouseEvent> eventHandler) throws IOException
     {
         //Chemin jusqu'au fichir Admin
-        Path path = Paths.get("C:\\Users\\Lorexto\\Desktop\\PROJET 1\\Projet1\\Projet_1\\src\\main\\java\\fr\\isika\\cda22\\Projet_1\\AdminList.txt");
+        Path path = Paths.get("src\\main\\java\\fr\\isika\\cda22\\Projet1Reeboot\\AdminList.txt");
 
         //Compte le nombre de lignes dans le fichier
         long count = Files.lines(path).count();
@@ -73,8 +73,6 @@ public class LoginController {
 //                    return false;}
 //                    }
                }
-          
-
                 
        else {
 

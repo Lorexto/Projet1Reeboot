@@ -9,7 +9,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableView.TableViewSelectionModel;
 
-public class MultiSelectTableView<S> extends TableView<Stagiaire4Liste> {
+public class MultiSelectTableView<S> extends TableView<Stagiaire> {
 
 
 	private boolean _update = false;
@@ -29,7 +29,7 @@ public class MultiSelectTableView<S> extends TableView<Stagiaire4Liste> {
     /**
      * @see TableView#TableView(ObservableList)
      */
-    public MultiSelectTableView(ObservableList<Stagiaire4Liste> items) {
+    public MultiSelectTableView(ObservableList<Stagiaire> items) {
         super(items);
         _init();
     }
@@ -85,9 +85,9 @@ public class MultiSelectTableView<S> extends TableView<Stagiaire4Liste> {
      *
      * @param c A function that will mutate the selection.
      */
-    public void updateSelection(Consumer<TableViewSelectionModel<Stagiaire4Liste>> c) {
+    public void updateSelection(Consumer<TableViewSelectionModel<Stagiaire>> c) {
         _update = true;
-        TableViewSelectionModel<Stagiaire4Liste> sm = getSelectionModel();
+        TableViewSelectionModel<Stagiaire> sm = getSelectionModel();
         c.accept(sm);
         Platform.runLater(() -> {
             sm.select(null);

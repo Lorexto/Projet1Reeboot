@@ -2,6 +2,7 @@ package fr.isika.cda22.Projet1Reeboot;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -68,7 +69,7 @@ public VueFormulaire Formulaire;
     		
     		try {
 				if(ChangesController.Update(vueMenu.refresh.getOnMouseClicked())) {
-					VueMenu.table.setItems(VueMenu.getContactList());
+					VueMenu.table.setItems(VueMenu.getContactList(VueMenu.getListOrdreAlpha()));
 					VueMenu.table.refresh();
 				}
 			} catch (IOException e) {
@@ -81,16 +82,18 @@ public VueFormulaire Formulaire;
     	vueMenu.getDisconnect().setOnAction(eventAction ->{
     		
     		try {
-				if(ChangesController.Deconnexion(vueMenu.disconnect.getOnMouseClicked())) {
+				if(ChangesController.Deconnexion(vueMenu.disconnect.getOnMouseClicked())==true) {
 					stage.setScene(Login);
 				}
+				else {stage.setScene(vueMenu);}
+			
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
     	});
     	
-    	vueMenu.getTable();
+    	
     	
     	
     	

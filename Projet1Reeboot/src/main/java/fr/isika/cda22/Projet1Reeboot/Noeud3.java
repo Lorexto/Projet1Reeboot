@@ -25,11 +25,13 @@ public class Noeud3 {
 
 	///////////////////////// attributs///////////////////////////////////////
 	private Stagiaire cle;
+	private Stagiaire4Liste cleBis;
 	private int filsGauche;
 	private int filsDroit;
 	private int doublon;
 	private int numeroNoeud;
 	private int compteTours=0;
+
 
 	///////////////////////// Constructeurs////////////////////////////////
 
@@ -63,6 +65,12 @@ public class Noeud3 {
 	}
 	public void setFilsGauche(int filsGauche) {
 		this.filsGauche = filsGauche;
+	}
+	public Stagiaire4Liste getCleBis() {
+		return cleBis;
+	}
+	public void setCleBis(Stagiaire4Liste cleBis) {
+		this.cleBis = cleBis;
 	}
 	public int getFilsDroit() {
 		return filsDroit;
@@ -646,41 +654,120 @@ public void modifierStagiaire(Stagiaire stModif, RandomAccessFile raf, boolean n
 ////////////////////////////////////////////////////////////////
 ///////////////////////Methode TRI ALPHABETIQUE/////////////
 ///////////////////////////////////////////////////////////////
-public static ArrayList<Noeud3> ordreAlpha(int numNoeud, RandomAccessFile raf, ArrayList<Noeud3> ListOrdreAlpha) {
+public static ArrayList<Stagiaire> ordreAlpha(int numNoeud, RandomAccessFile raf, ArrayList<Stagiaire> ListOrdreAlpha) throws EOFException {
 	
 	
 	try {
-		
+		ListOrdreAlpha=new ArrayList<>();
+		System.out.println(raf.length());
+		for (int i=1; i<=(int)raf.length()/132; i++) {
 		Noeud3 n;
+		
+		
 		n = lireParentSuivant(numNoeud, raf);
-	
-	if (n.getDoublon() == -1) {
+		n.getCle().getNom().replaceAll( "[^a-zA-Z0-9]", " ");
+		n.getCle().getPrenom().replace("[^a-zA-Z0-9]", " ");
+		
+		System.out.println(n.getDoublon());
+		System.out.println(n.getFilsDroit());
+		System.out.println(n.getCle());
+if (n.getDoublon() == -1) {
 		if (n.getFilsGauche() != -1) { // tant qu'il y a un FG, on continue jusqu'à trouver le plus petit FG
 			ordreAlpha(n.getFilsGauche(), raf, ListOrdreAlpha);
 		}
-		ListOrdreAlpha.add(n); // donc on l'ajoute à la liste
+		
+		
+		ListOrdreAlpha.add(n.getCle()); // donc on l'ajoute à la liste
+		System.out.println(ListOrdreAlpha.size()+"sdfgh");
 		if (n.getFilsDroit() != -1) { // puis on regarde les FD, qui vont être ajoutés au prochain tour s'ils n'ont pas de FG
 			ordreAlpha(n.getFilsDroit(), raf, ListOrdreAlpha);
 		}
-	}
-	else {
+}
+else {
 		if (n.getFilsGauche() != -1) { // tant qu'il y a un FG, on continue jusqu'à trouver le plus petit FG
 			ordreAlpha(n.getFilsGauche(), raf, ListOrdreAlpha);
 		}
-		//ordreAlpha(n.getDoublon(), raf, ListOrdreAlpha);
-		//ListOrdreAlpha.add(n); // donc on l'ajoute à la liste
+		ordreAlpha(n.getDoublon(), raf, ListOrdreAlpha);
+		ListOrdreAlpha.add(n.getCle()); // donc on l'ajoute à la liste
 		if (n.getFilsDroit() != -1) { // puis on regarde les FD, qui vont être ajoutés au prochain tour s'ils n'ont pas de FG
 			ordreAlpha(n.getFilsDroit(), raf, ListOrdreAlpha);
-		}	}
-	return ListOrdreAlpha;
-	
-	}
-	 catch (EOFException e) {
+		}	
+		
+}
+System.out.println(ListOrdreAlpha.size()+"fsddddddddddddddddddddd");
+return ListOrdreAlpha;
+
+		}
+	} catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
-	} // on lit le noeud
+	}
+	
 	return ListOrdreAlpha;
+	
 }
+
+
+
+/////////////////////////////////////////////
+//public ArrayList<Stagiaire> ordreAlphaV2(int numNoeud, RandomAccessFile raf, ArrayList<Stagiaire> ListOrdreAlphaV2) throws EOFException {
+//	
+//	
+//	try {
+//		ListOrdreAlphaV2=new ArrayList<>();
+//		System.out.println(raf.length());
+//		//for (int i=1; i<=(int)raf.length()/132; i++) {
+//		Noeud3 n;
+//		
+//		
+//		n = lireParentSuivant(0, raf);
+////		n.getCle().getNom().replaceAll( "[^a-zA-Z0-9]", " ");
+////		n.getCle().getPrenom().replace("[^a-zA-Z0-9]", " ");
+//		
+//		System.out.println(n.getDoublon());
+//		System.out.println(n.getFilsDroit());
+//		System.out.println(n.getCle());
+//while ((int) raf.getFilePointer()<raf.length()) {
+//		if (n.getFilsGauche()!=-1) {
+//			raf.seek( (n.getNumeroNoeud()*132)+TAILLE_NOEUD);
+//			int FG= raf.readInt();
+//			System.out.println(FG+"FG");
+//			n.ordreAlphaV2(FG,raf , ListOrdreAlphaV2);
+//			ListOrdreAlphaV2.add(n.getCle());
+//			if(lireParentSuivant(n.getFilsGauche(), raf).getFilsDroit()!=-1) {
+//				n.ordreAlphaV2(n.getFilsGauche(), raf, ListOrdreAlphaV2);
+//				ListOrdreAlphaV2.add(n.getCle());
+//			}
+//		}
+//		else {
+//			ListOrdreAlphaV2.add(n.getCle());
+//			if(lireParentSuivant(n.getFilsDroit(), raf).getFilsGauche()!=-1) {
+//				ListOrdreAlphaV2.add(n.getCle());
+//			n.ordreAlphaV2(n.getFilsDroit(), raf, ListOrdreAlphaV2);
+//			if(n.getFilsDroit()==-1) {
+//				ListOrdreAlphaV2.add(n.getCle());
+//			}
+//		}
+//			
+//		
+//		}
+//		return ListOrdreAlphaV2;
+//		System.out.println();
+//	}
+//}catch (IOException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
+//	
+//	return ListOrdreAlphaV2;
+//	
+//}
+
+
+
+
+
+
 
 
 
