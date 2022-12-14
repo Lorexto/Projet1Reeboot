@@ -3,7 +3,9 @@ package fr.isika.cda22.Projet1Reeboot;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Optional;
+import java.util.function.Predicate;
 
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -42,11 +44,11 @@ private Object label;
 		String id= VueFormulaire.txtPromo.getText();
 		String annee=VueFormulaire.txtAnnee.getText();
 		
-		if(nom!= null
-			&&prenom!= null
-			&&dpt!= null
-			&&id!= null
-			&&annee!= null
+		if(nom!= ""
+			&&prenom!= ""
+			&&dpt!= ""
+			&&id!= ""
+			&&annee!= ""
 		) {
 		RandomAccessFile raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet1Reeboot/fichbinTEST3.bin", "rw");
 		 nom=VueFormulaire.txtNom.getText();
@@ -72,7 +74,6 @@ private Object label;
             msg.showAndWait();
 			return false;
 		}
-		
 	}
 	
 
@@ -117,13 +118,10 @@ public  static boolean Deconnexion( EventHandler<? super MouseEvent> eventHandle
 
 }
 
-public static boolean Search( EventHandler<? super MouseEvent> eventHandler) throws IOException{
-	
-	
-	
-	return false;
-	
-}
+
+
+
+
 
 public static boolean Delete( EventHandler<? super MouseEvent> eventHandler) throws IOException{
 	
@@ -132,6 +130,8 @@ public static boolean Delete( EventHandler<? super MouseEvent> eventHandler) thr
 	return false;
 	
 }
+
+
 
 
 

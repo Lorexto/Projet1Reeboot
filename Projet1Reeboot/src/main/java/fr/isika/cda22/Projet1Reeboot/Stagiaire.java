@@ -1,4 +1,7 @@
 package fr.isika.cda22.Projet1Reeboot;
+
+import javafx.scene.Node;
+
 public class Stagiaire {
 	//attributs
 
@@ -199,6 +202,12 @@ public class Stagiaire {
 
 
 	}
+
+
+//	public Node toLowerCase() {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 }
 
 

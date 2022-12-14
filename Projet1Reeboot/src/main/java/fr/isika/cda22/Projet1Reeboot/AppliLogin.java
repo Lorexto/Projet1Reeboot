@@ -69,7 +69,7 @@ public VueFormulaire Formulaire;
     		
     		try {
 				if(ChangesController.Update(vueMenu.refresh.getOnMouseClicked())) {
-					VueMenu.table.setItems(VueMenu.getContactList(VueMenu.getListOrdreAlpha()));
+					VueMenu.table.setItems(VueMenu.getContactList());
 					VueMenu.table.refresh();
 				}
 			} catch (IOException e) {
@@ -93,17 +93,19 @@ public VueFormulaire Formulaire;
 			}
     	});
     	
+//    	vueMenu.getSearch().setOnAction(eventAction ->{
+//    		
+//    		try {
+//				if(ChangesController.searchRequest(vueMenu.search.getOnMouseClicked())==true) {
+//					
+//					
+//				}
+//    		} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+    //	});
     	
-    	
-    	
-    	
-    	
-    	
-    	
-    
-
-
-
 
         stage.setScene(Login);
         stage.setTitle("École ISIKA");

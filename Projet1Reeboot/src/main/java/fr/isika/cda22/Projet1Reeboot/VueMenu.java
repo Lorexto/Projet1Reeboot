@@ -2,15 +2,25 @@ package fr.isika.cda22.Projet1Reeboot;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ArrayChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -21,6 +31,7 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -28,6 +39,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
 public class VueMenu extends Scene {
+	
+//////////////////////////////////////////
+////////ATTRIBUTS///////
+//////////////////////////////////////////
 	GridPane VueMenu;
 	StackPane listeStagiaires;
 	Button search;
@@ -41,31 +56,27 @@ public class VueMenu extends Scene {
 	static TableView<Stagiaire> table;
     static ArrayList<Stagiaire> ListOrdreAlpha ;
     static ObservableList<Stagiaire> list;
-    FilteredList <Stagiaire> listFilt;
-                  
+    static FilteredList <Stagiaire> listFilt;
+    public static TextField searchBar;
+    static Stagiaire stagiaire;
+    Button searchButton;
+    static ObservableList<Stagiaire>filteredList;
+    String searchTxt;
+  ///////////////////////////////////////////////////                
 
 	
-
-	public ObservableList<Stagiaire> getList() {
-		return list;
-	}
-
-	public void setList(FilteredList<Stagiaire> list) {
-		this.list = list;
-	}
-
 	public VueMenu()  {
 		super(new GridPane(),800,600);
 		GridPane root = (GridPane)this.getRoot();
-		//this.setRoot(root);
-
-
-		//BOUTONS
+		
+////////////////////////////////////////////////////
+////////////BOUTONS et FIELDS
+///////////////////////////////////////////////////		
 		search = new Button ("RECHERCHE");
 	    addButton = new Button ("AJOUTER");
 		delete= new Button("SUPPRIMER");
 		refactor= new Button("MODIFIER");
-		disconnect = new Button ("DECONNExION");
+		disconnect = new Button ("DECONNEXION");
 		refresh= new Button ("RAFRAICHIR LA PAGE");
 		//HBOX et INSERTON BOUTONS
 		HBox ConteneurBoutons= new HBox();
@@ -74,14 +85,14 @@ public class VueMenu extends Scene {
 		ConteneurBoutons.getChildren().add(2, delete);
 		ConteneurBoutons.getChildren().add(3, refactor);
 	//	ConteneurBoutons.getChildren().add(4, disconnect);
-		//TABLE VIEW
-	    table = new TableView<>();
-	   // table.setItems(getContactList(ListOrdreAlpha ));
+		searchBar= new TextField();    
+//////////////////////////////////////////////////////////
+////// TABLE VIEW SET UP//////////
+/////////////////////////////////////////////////////////   
+		table = new TableView<>();
         final Label label = new Label("Liste des stagiaires");
         label.setFont(new Font("Arial", 20));
         table.setEditable(true);
-        
-        
         TableColumn<Stagiaire, String> nomCol = new TableColumn<>("Nom");
         nomCol.setMinWidth(100);
         nomCol.setCellValueFactory(new PropertyValueFactory<>("nom"));
@@ -98,11 +109,12 @@ public class VueMenu extends Scene {
         dptCol.setMinWidth(50);
         dptCol.setCellValueFactory(new PropertyValueFactory<>("dpt"));
         table.getColumns().addAll(nomCol,prenomCol,anneeCol,promoCol,dptCol);
-
+/////////////////////////////////////////////////////////////////////////////////
+/////////////////FILTER SET UP////////////////////////
+////////////////////////////////////////////////////////////////////////////////                
         TextField filterField= new TextField();
-      //Adding ChoiceBox and TextField here!
         list=getContactList();
-        listFilt = new FilteredList<Stagiaire>(list);
+        listFilt = new FilteredList<Stagiaire>(list,e->true);
         filterField.textProperty().addListener((observable, oldValue, newValue) -> {
         	listFilt.setPredicate(stagiaire -> {
 				// If filter text is empty, display all persons.
@@ -116,25 +128,45 @@ public class VueMenu extends Scene {
 				} else if (stagiaire.getPrenom().toLowerCase().contains(lowerCaseFilter)) {
 					return true; // Filter matches last name.
 				}
-				return false; // Does not match.
-			});
+				return false; // Does not match
+			});    	
 		});
-       SortedList<Stagiaire> SortedSt= new SortedList<>(listFilt);
-        SortedSt.comparatorProperty().bind(table.comparatorProperty());
-        table.setItems(SortedSt);
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+        ///////////////////////////////////////////////////////////////////
+        searchBar.setOnKeyReleased(e->{
+			
+			searchBar.textProperty().addListener((observableValue,oldValue,newValue)->{
+				listFilt.setPredicate((Predicate<? super Stagiaire>) stagiaire ->{
+					
+					if(newValue==null||newValue.isEmpty()) {
+						return true;
+					}
+					
+					String lowerCaseFilter= newValue.toLowerCase();
+					
+//					int i=0;
+//					while( i<listFilt.size()) {
+						if(stagiaire.getNom().toLowerCase().contains(lowerCaseFilter)) {
+							return true;
+						}
+					
+						else if(stagiaire.getPrenom().toLowerCase().contains(lowerCaseFilter)) {
+							return true;
+						}
+						else if(stagiaire.getId().toLowerCase().contains(lowerCaseFilter)){
+							return true;
+						}
+					
+					//}
+					
+					return false;
+				});
+			});
+			
+		});
+        ////////////////////////////
+        SortedList<Stagiaire> ResultatsTris= new SortedList<>(listFilt);
+		ResultatsTris.comparatorProperty().bind(table.comparatorProperty());
+		table.setItems(ResultatsTris);
         VBox vbox = new VBox();
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(20, 20, 20, 20));
@@ -143,100 +175,16 @@ public class VueMenu extends Scene {
 		root.add(ConteneurBoutons,1,2);
 		root.add(table, 1, 4);
 	    root.add(refresh,8,4);
-	    root.add(disconnect, 8, 8);
+	    root.add(disconnect, 8, 9);
+	    root.add(searchBar, 10, 7);
+	    root.add(search, 9, 7);
 	}
 
+///////////////////////////////////////////////////////////////////////
+/////////////////METHODES/////////////////////////
+//////////////////////////////////////////////////////////////////////	
 
-
-		public static ObservableList<Stagiaire> getContactList(ArrayList<Stagiaire> ListOrdreAlpha ) {
-//			try {
-//			RandomAccessFile raf = new RandomAccessFile("src/main/java/fr/isika/cda22/Projet1Reeboot/fichbinTEST3.bin", "rw");
-//			ArrayList<Noeud3> ListOrdreAlpha = new ArrayList<Noeud3>();
-//			ListOrdreAlpha = Noeud3.ordreAlpha(0, raf, ListOrdreAlpha);
-//			Noeud3 racine = ListOrdreAlpha.get(0);
-//
-//			Stagiaire4Liste st1 = new Stagiaire4Liste(racine.getCle().getNom().split("\\*")[0], racine.getCle().getPrenom().split("\\*")[0], racine.getCle().getId().split("\\*")[0], racine.getCle().getDpt().split("\\*")[0], racine.getCle().getAnnee().split("\\*")[0]);
-//			ObservableList<Stagiaire4Liste> list = FXCollections.observableArrayList(st1);
-//
-//
-//			String nomCourant;
-//			for (int i=1; i<((int)raf.length())/132; i++) {
-//				nomCourant = ListOrdreAlpha.get(i).getCle().getNom().split("\\*")[0];
-//
-//			boolean go = true;
-//			int j = 1;
-//			while (j<(((int)raf.length()))/132 && go == true) {
-//				
-//				Noeud3 nCourant = Noeud3.lireParentSuivant(j, raf);
-//				String nom = nCourant.getCle().getNomLong().split("\\*")[0];
-//				j++;
-//
-//				if (nom.compareTo(nomCourant) == 0) {
-//					String prenom = nCourant.getCle().getPrenomLong().split("\\*")[0];
-//					String id = nCourant.getCle().getId().split("\\*")[0];
-//					String dpt = nCourant.getCle().getDpt().split("\\*")[0];
-//					String annee = nCourant.getCle().getAnnee().split("\\*")[0];
-//					Stagiaire4Liste newSt = new Stagiaire4Liste(nom, prenom, id, dpt, annee);
-//					list.add(newSt);
-//					go = false;
-//				}
-//				
-//			}
-//			}
-//
-//		    return list;
-//
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			return null;
-//		}
-//		}         
-			
-			
-		    System.out.println("HAHAHAHHAHAHAHAHAHA");
-			Noeud3 n = new Noeud3();
-			try {
-				
-				System.out.println("HIHIHI");
-				RandomAccessFile raf = new RandomAccessFile("src/main/java/fr/isika/cda22/Projet1Reeboot/fichbinTEST3.bin", "rw");
-				
-				
-				ListOrdreAlpha = n.ordreAlpha(0, raf, ListOrdreAlpha);
-				ObservableList<Stagiaire> list =  FXCollections.observableArrayList(ListOrdreAlpha);
-				int numNoeud;
-				for (int i=1;i< raf.length()/132;i++) {
-				ListOrdreAlpha = n.ordreAlpha(i, raf, ListOrdreAlpha);
-					Stagiaire st=ListOrdreAlpha.iterator().next();
-					list.add(st);
-				}
-				
-//				for (int i=1; i<=(int)raf.length()/132; i++) { // on parcourt la ListOrdreAlpha		
-//					
-//				
-//					String nom = ListOrdreAlpha.get(i-1).getNom().split("\\*")[0]; // et on stocke le nom, donc par ordre alpha
-//					String prenom = ListOrdreAlpha.get(i-1).getPrenomLong().split("\\*")[0];
-//					String id = ListOrdreAlpha.get(i-1).getId().split("\\*")[0];
-//					String dpt = ListOrdreAlpha.get(i-1).getDpt().split("\\*")[0];
-//					String annee = ListOrdreAlpha.get(i-1).getAnnee().split("\\*")[0];
-//					Stagiaire newSt = new Stagiaire(nom, prenom, id, dpt, annee);
-//					System.out.println("SDFDGHTYJTHRGEF");
-		
-					
-					System.out.println(list);
-					
-				
-			    return list;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return null;
-			}
-			
-		}
-		
-		
-		
-
-		private ObservableList<Stagiaire> getContactList() {
+		public static ObservableList<Stagiaire> getContactList() {
 
 			Stagiaire st1 = new Stagiaire("LACROIX","Kim", "CDA", "98", "2012");
 			Stagiaire st2 = new Stagiaire("CHAVENEAU","Alex","AL", "98","2012");
@@ -269,17 +217,51 @@ public class VueMenu extends Scene {
 		
 		
 		
+		private static boolean searchStagiairesOrder(Stagiaire stagiaire, String searchText){
+		    return (stagiaire.getNom().toLowerCase().contains(searchText.toLowerCase())) ||
+		            (stagiaire.getPrenom().toLowerCase().contains(searchText.toLowerCase()));
+		            
+		}
+
+		
+		public static ObservableList<Stagiaire> filterList(List<Stagiaire> list, String searchText){
+		    List<Stagiaire> filteredList = new ArrayList<>();
+		    for (Stagiaire stagiaire : list){
+		        if(searchStagiairesOrder(stagiaire, searchText)) filteredList.add(stagiaire);
+		    }
+		    return FXCollections.observableList(filteredList);
+		}
+		////////////////////////////////////////////////////////////////////////////////////////////
+		
+//		public static void Search(EventHandler<? super MouseEvent> eventHandler) throws IOException{
+//			table.getItems().clear();
+//			table.getItems().addAll(searchList(searchBar.getText(),listFilt));
+//			
+//			
+//		}
+//		
+//			
+//		public static List<Stagiaire> searchList(String searchTxt,FilteredList <Stagiaire>listFilt){
+//			List<String> searchTxtArray= Arrays.asList(searchTxt.trim().split(" "));
+//			
+//			return listFilt.stream().filter(input ->{ 
+//				
+//				return searchTxtArray.stream().allMatch(stagiaire ->
+//				 input.toString().toLowerCase().contains(stagiaire.toLowerCase()));
+//			}).collect(Collectors.toList());
+//					
+//}
+//////////////////////////////////////////////////////////////////////////////////////////
 		
 		
-		
-		
-		
+			
+			
 		
 
 
-
-
-
+//////////////////////////////////////////////////
+/////////GETTERS ET SETTERS/////////////		
+/////////////////////////////////////////////////
 	public GridPane getVueMenu() {
 		return VueMenu;
 	}
@@ -363,23 +345,14 @@ public class VueMenu extends Scene {
 	}
 
 
-
-
-
 	public TableView<Stagiaire> getTable() {
 		return table;
 	}
 
 
-
-
-
 	public void setTable(TableView<Stagiaire> table) {
 		this.table = table;
 	}
-
-
-
 
 	public Button getRefresh() {
 	return refresh;
