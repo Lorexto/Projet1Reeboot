@@ -30,9 +30,7 @@ public class Noeud3 {
 	private int filsDroit;
 	private int doublon;
 	private int numeroNoeud;
-	private int compteTours=0;
-
-
+	
 	///////////////////////// Constructeurs////////////////////////////////
 
 	public Noeud3() {
@@ -117,7 +115,9 @@ public class Noeud3 {
 			e.printStackTrace();
 			return -1;}
 	}
-	//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////AJOUT STAGIAIRE DANS BIN/////////
+///////////////////////////////////////////////////////////////////////////
 
 	public static void ajouterStagiaire(Noeud3 n, Noeud3 nParent,RandomAccessFile raf) throws FileNotFoundException, EOFException {
 
@@ -143,7 +143,7 @@ public class Noeud3 {
 				System.out.println("++++++");
 				}
 		 }
-		//if (cle.compareTo(cleParent)>0){// SI Valeur nouveau nom inferieur a valeur nom racine on va a gauche/////
+		// SI Valeur nouveau nom inferieur a valeur nom racine on va a gauche/////
 		 else {
 			 if(cle.compareTo(cleParent)<0) { // si on va à droite
 				if (nParent.getFilsDroit() == -1) {
@@ -164,7 +164,7 @@ public class Noeud3 {
 				ajouterStagiaire(n, Noeud3.lireParentSuivant(nParent.getFilsDroit(), raf), raf);
 			}
 		 }
-//if (cle.compareTo(cleParent)>0){// SI Valeur nouveau nom inferieur a valeur nom racine on va a gauche/////
+// SI Valeur nouveau nom inferieur a valeur nom racine on va a gauche/////
 		 else {
 					if (nParent.getFilsGauche() == -1) {
 						ecrireNoeudFinBin(n, raf);
@@ -271,7 +271,7 @@ public class Noeud3 {
 
 	}
 
-///////////////////////////////////////////////////////////////////
+/////////////////////////LIRE NOM BIN//////////////////////////////////////////
 
 public String lireNom(int numNoeudALire, RandomAccessFile raf) throws EOFException {
 	String nom="";
@@ -287,7 +287,7 @@ public String lireNom(int numNoeudALire, RandomAccessFile raf) throws EOFExcepti
 		return nom;
 }
 /////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////
+///////////////////////LIRE FD BIN////////////////////////////////////////////
 
 public int lireFD(int numNoeudALire, RandomAccessFile raf) throws EOFException {
 int FD=-1;
@@ -307,7 +307,7 @@ e.printStackTrace();
 return FD;
 }
 
-/////////////////////////////////////////////////////////////////
+///////////////////////LIRE FG BIN//////////////////////////////////////////
 public int lireFG(int numNoeudALire, RandomAccessFile raf) throws EOFException {
 int FG=-1;
 
@@ -324,7 +324,7 @@ e.printStackTrace();
 return FG;
 
 }
-//////////////////////////////////////////////////////////
+///////////////////////LIRE DOUBLONS BIN///////////////////////////////////
 public int lireDBL(int numNoeudALire, RandomAccessFile raf) throws EOFException {
 int DBL=-1;
 
@@ -342,7 +342,8 @@ return DBL;
 
 }
 ////////////////////////////////////////////////////////
-
+///////////// METHODE RECHERCHE//////////////////////
+///////////////////////////////////////////////////////
 
 		//@SuppressWarnings("unused")
 public Noeud3 searchInBinFile(RandomAccessFile raf, String nomRech) throws IOException {
@@ -365,7 +366,7 @@ public Noeud3 searchInBinFile(RandomAccessFile raf, String nomRech) throws IOExc
 		for(h=0;h<sizeFile;h++) {
 		// on compare la lecture des noms du fichierBIN avec le nom recherche
 		if(lireNom(h, raf).compareTo(nomRech)==0){
-	///////// LECTRURE PRENOMS DPT ID ANNEE FG FD DBL POS///////////
+///////// LECTRURE PRENOMS DPT ID ANNEE FG FD DBL POS///////////
 			String prenomBIN = "";
 			for( j =0;  j<20 ; j++) {
 			prenomBIN += raf.readChar();}
@@ -399,13 +400,9 @@ public Noeud3 searchInBinFile(RandomAccessFile raf, String nomRech) throws IOExc
 	        if(DBL!=-1) {
 	        	System.out.println("Autres FD TROUVES");
 	        	raf.seek(DBL*132);
-
-
 	        }
-
 			return n2;	}
 		}
-
 
 }catch (IOException e) {
 	e.printStackTrace();
@@ -627,7 +624,6 @@ public int ecrireCleBin(int numNoeud, Noeud3 n, RandomAccessFile raf) {
 }
 
 
-
 //////////////////////////////////////////////////////
 ////////// MODIFIER STAGIAIRE////////
 /////////////////////////////////////////////////////
@@ -694,7 +690,7 @@ else {
 		}	
 		
 }
-System.out.println(ListOrdreAlpha.size()+"fsddddddddddddddddddddd");
+
 return ListOrdreAlpha;
 
 		}
@@ -709,69 +705,7 @@ return ListOrdreAlpha;
 
 
 
-/////////////////////////////////////////////
-//public ArrayList<Stagiaire> ordreAlphaV2(int numNoeud, RandomAccessFile raf, ArrayList<Stagiaire> ListOrdreAlphaV2) throws EOFException {
-//	
-//	
-//	try {
-//		ListOrdreAlphaV2=new ArrayList<>();
-//		System.out.println(raf.length());
-//		//for (int i=1; i<=(int)raf.length()/132; i++) {
-//		Noeud3 n;
-//		
-//		
-//		n = lireParentSuivant(0, raf);
-////		n.getCle().getNom().replaceAll( "[^a-zA-Z0-9]", " ");
-////		n.getCle().getPrenom().replace("[^a-zA-Z0-9]", " ");
-//		
-//		System.out.println(n.getDoublon());
-//		System.out.println(n.getFilsDroit());
-//		System.out.println(n.getCle());
-//while ((int) raf.getFilePointer()<raf.length()) {
-//		if (n.getFilsGauche()!=-1) {
-//			raf.seek( (n.getNumeroNoeud()*132)+TAILLE_NOEUD);
-//			int FG= raf.readInt();
-//			System.out.println(FG+"FG");
-//			n.ordreAlphaV2(FG,raf , ListOrdreAlphaV2);
-//			ListOrdreAlphaV2.add(n.getCle());
-//			if(lireParentSuivant(n.getFilsGauche(), raf).getFilsDroit()!=-1) {
-//				n.ordreAlphaV2(n.getFilsGauche(), raf, ListOrdreAlphaV2);
-//				ListOrdreAlphaV2.add(n.getCle());
-//			}
-//		}
-//		else {
-//			ListOrdreAlphaV2.add(n.getCle());
-//			if(lireParentSuivant(n.getFilsDroit(), raf).getFilsGauche()!=-1) {
-//				ListOrdreAlphaV2.add(n.getCle());
-//			n.ordreAlphaV2(n.getFilsDroit(), raf, ListOrdreAlphaV2);
-//			if(n.getFilsDroit()==-1) {
-//				ListOrdreAlphaV2.add(n.getCle());
-//			}
-//		}
-//			
-//		
-//		}
-//		return ListOrdreAlphaV2;
-//		System.out.println();
-//	}
-//}catch (IOException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	}
-//	
-//	return ListOrdreAlphaV2;
-//	
-//}
-
-
-
-
-
-
-
-
-
-////////////////////////////////////////////////FIN METHODE/////////////////////////////////////////////
+////////////////////////////////////////////////FIN METHODES///////////////////////////////////////////////////
 
 
 

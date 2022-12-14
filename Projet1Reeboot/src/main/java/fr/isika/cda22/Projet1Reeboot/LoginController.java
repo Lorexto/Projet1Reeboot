@@ -19,6 +19,9 @@ public class LoginController {
 	 public VueMenu vueMenu;
 
 
+	 
+	 
+	 ////////////METHODE VERIFICATION DU LOGIN/////////////////////////////////
 	public static boolean loginButton(EventHandler<? super MouseEvent> eventHandler) throws IOException
     {
         //Chemin jusqu'au fichir Admin
@@ -29,17 +32,13 @@ public class LoginController {
 
         /// Pour chaque ligne
            for (int i = 0; i < count; i++)
-           {
-                String line = Files.readAllLines(path).get(i); // on lit toutes les lignes
+           {String line = Files.readAllLines(path).get(i); // on lit toutes les lignes
          if(!line.trim().equals("")) // si on ne recontre pas de vide
                 {//on cree un tableau de string et on definit une methode de decoupage entre useId et mdp ( la virgule)
                     String[] profile = line.split(",");
                     String userId = profile[0]; // en première position user id
                     String mdp = profile[1]; // en deuxième position mot de passe
-
-                   System.out.println(profile.toString());
-                
-                
+                    System.out.println(profile.toString());
                   //trim() supprime les expaces avant ou apres le mot si il y en a
                     if(	userId.trim().equals(VueLogin.User_ID.getText())) 
                          {
@@ -60,22 +59,10 @@ public class LoginController {
                             msg.setContentText("NON! MOT DE PASSE ERRONE. Retentez votre chance");
                             msg.showAndWait();
                             return false;}
-                        	
-                              }
+                        	 }
                          }
-                
-                    	
-//                    else  {
-//                    	{Alert msg = new Alert(AlertType.ERROR);
-//                     msg.setTitle(VueLogin.User_ID.getText());
-//                    msg.setContentText("NON!ID de connexion erronne! Retentez votre chance");
-//                    msg.showAndWait();
-//                    return false;}
-//                    }
-               }
-                
+                                
        else {
-
 
            if(VueLogin.User_ID.getText()==null) {
                 System.out.println("Votre UserID est incorrect");
@@ -93,14 +80,13 @@ public class LoginController {
                     msg.showAndWait();
                     return false;}
                }
-     
-
-           }
-
-		return false;
+                }
 	
     }
+		return false;
 }
+////////////////////////////////////////FIN METHODE////////////////////////////////////////////////////////////	
+}	
 
 
 

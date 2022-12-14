@@ -41,7 +41,7 @@ public class Stagiaire {
 
 	}
 
-
+////////// GETTERS ET SETTERS LONG///////////////////////////////////
 	public String getNomLong() {
 		String nomLong = nom;
 		if (nomLong.length() > TAILLE_MAX_NOM ) {
@@ -53,6 +53,7 @@ public class Stagiaire {
 		}
 		return nomLong;
 	}
+	
 	public <nom> String setToNomLong() {
 		String nomLong = null;
 
@@ -62,9 +63,6 @@ public class Stagiaire {
 
 		return nomLong;
 	}
-
-
-
 
 	public String getPrenomLong() {
 		String prenomLong = prenom;
@@ -77,7 +75,6 @@ public class Stagiaire {
 		}
 		return prenomLong;
 	}
-
 
 	public String getDptLong() {
 		String dptLong = dpt;
@@ -115,7 +112,7 @@ public class Stagiaire {
 		return anneeLong;
 	}
 
-	//getters & setters
+///////////////////getters & setters
 
 	public String getNom() {
 		return nom;
@@ -123,9 +120,6 @@ public class Stagiaire {
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
-
-
-
 
 	public String getPrenom() {
 		return prenom;
@@ -163,18 +157,6 @@ public class Stagiaire {
 		return "(" + nom + " " + prenom + " " + dpt + " " + id + " " + annee+ ")";
 	}
 
-//	public int compareTo(StagiaireSS myStagiaire){
-//		if (myStagiaire.getNom().compareTo(this.nom) == 0) { // 0 si c'est identique
-//			return myStagiaire.getPrenom().compareTo(this.prenom);
-//
-//
-//			// on compare les prénoms
-//		} else {
-//
-//
-//			return myStagiaire.getNom().compareTo(this.nom); // sinon on compare les noms
-//		}
-//	}
 
 
 	public int compareTo(Stagiaire myStagiaire){

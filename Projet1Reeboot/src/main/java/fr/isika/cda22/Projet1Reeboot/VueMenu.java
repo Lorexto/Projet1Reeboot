@@ -117,38 +117,33 @@ public class VueMenu extends Scene {
         listFilt = new FilteredList<Stagiaire>(list,e->true);
         filterField.textProperty().addListener((observable, oldValue, newValue) -> {
         	listFilt.setPredicate(stagiaire -> {
-				// If filter text is empty, display all persons.
+				// Isi fitre vide on affiche toute la liste
 				if (newValue == null || newValue.isEmpty()) {
 					return true;
 				}
                 String lowerCaseFilter = newValue.toLowerCase();
 				
 				if (stagiaire.getNom().toLowerCase().contains(lowerCaseFilter)) {
-					return true; // Filter matches first name.
+					return true; // Match
 				} else if (stagiaire.getPrenom().toLowerCase().contains(lowerCaseFilter)) {
-					return true; // Filter matches last name.
+					return true; // Match.
 				}
-				return false; // Does not match
+				return false; // Pas de match
 			});    	
 		});
-        ///////////////////////////////////////////////////////////////////
+ //////////////////////////LISTENER POUR RECHERCHE DYNAMIQUE///////////////////////////////
         searchBar.setOnKeyReleased(e->{
-			
 			searchBar.textProperty().addListener((observableValue,oldValue,newValue)->{
 				listFilt.setPredicate((Predicate<? super Stagiaire>) stagiaire ->{
 					
 					if(newValue==null||newValue.isEmpty()) {
 						return true;
 					}
-					
 					String lowerCaseFilter= newValue.toLowerCase();
-					
-//					int i=0;
-//					while( i<listFilt.size()) {
+
 						if(stagiaire.getNom().toLowerCase().contains(lowerCaseFilter)) {
 							return true;
-						}
-					
+						}				
 						else if(stagiaire.getPrenom().toLowerCase().contains(lowerCaseFilter)) {
 							return true;
 						}
@@ -156,14 +151,12 @@ public class VueMenu extends Scene {
 							return true;
 						}
 					
-					//}
-					
 					return false;
 				});
 			});
 			
 		});
-        ////////////////////////////
+////////////////////////////AJOUT ELEMENTS DANS LE TAABLE VIEW////////////////////////////////
         SortedList<Stagiaire> ResultatsTris= new SortedList<>(listFilt);
 		ResultatsTris.comparatorProperty().bind(table.comparatorProperty());
 		table.setItems(ResultatsTris);
@@ -180,10 +173,14 @@ public class VueMenu extends Scene {
 	    root.add(search, 9, 7);
 	}
 
-///////////////////////////////////////////////////////////////////////
-/////////////////METHODES/////////////////////////
-//////////////////////////////////////////////////////////////////////	
 
+/////////////////////////////////////////METHODES///////////////////////////////////////////////////
+	
+
+	
+/////////////////////////////////////////////////////////////////////////	
+////////////////CREATION OBSERVABLE LIST VIA FICHIER BIN////////////	
+//////////////////////////////////////////////////////////////////////////	
 		public static ObservableList<Stagiaire> getContactList() {
 
 			Stagiaire st1 = new Stagiaire("LACROIX","Kim", "CDA", "98", "2012");
@@ -214,9 +211,9 @@ public class VueMenu extends Scene {
 		}		
 		
 		
-		
-		
-		
+/////////////////////////////////////////////////////////////////////////////////////////		
+////////////////////TRI LISTE FILTRE CLASSEMENT ALPHABETIQUE////////////////
+/////////////////////////////////////////////////////////////////////////////////////////		
 		private static boolean searchStagiairesOrder(Stagiaire stagiaire, String searchText){
 		    return (stagiaire.getNom().toLowerCase().contains(searchText.toLowerCase())) ||
 		            (stagiaire.getPrenom().toLowerCase().contains(searchText.toLowerCase()));
@@ -231,33 +228,8 @@ public class VueMenu extends Scene {
 		    }
 		    return FXCollections.observableList(filteredList);
 		}
-		////////////////////////////////////////////////////////////////////////////////////////////
-		
-//		public static void Search(EventHandler<? super MouseEvent> eventHandler) throws IOException{
-//			table.getItems().clear();
-//			table.getItems().addAll(searchList(searchBar.getText(),listFilt));
-//			
-//			
-//		}
-//		
-//			
-//		public static List<Stagiaire> searchList(String searchTxt,FilteredList <Stagiaire>listFilt){
-//			List<String> searchTxtArray= Arrays.asList(searchTxt.trim().split(" "));
-//			
-//			return listFilt.stream().filter(input ->{ 
-//				
-//				return searchTxtArray.stream().allMatch(stagiaire ->
-//				 input.toString().toLowerCase().contains(stagiaire.toLowerCase()));
-//			}).collect(Collectors.toList());
-//					
-//}
-//////////////////////////////////////////////////////////////////////////////////////////
-		
-		
-			
-			
-		
 
+		
 
 //////////////////////////////////////////////////
 /////////GETTERS ET SETTERS/////////////		
@@ -266,89 +238,61 @@ public class VueMenu extends Scene {
 		return VueMenu;
 	}
 
-
-
 	public void setVueMenu(GridPane vueMenu) {
 		VueMenu = vueMenu;
 	}
-
-
 
 	public StackPane getListeStagiaires() {
 		return listeStagiaires;
 	}
 
-
-
 	public void setListeStagiaires(StackPane listeStagiaires) {
 		this.listeStagiaires = listeStagiaires;
 	}
-
-
 
 	public Button getSearch() {
 		return search;
 	}
 
-
-
 	public void setSearch(Button search) {
 		this.search = search;
 	}
-
-
 
 	public Button getAddButton() {
 		return addButton;
 	}
 
-
-
 	public void setAddButton(Button addButton) {
 		this.addButton = addButton;
 	}
-
-
 
 	public Button getDelete() {
 		return delete;
 	}
 
-
-
 	public void setDelete(Button delete) {
 		this.delete = delete;
 	}
-
-
 
 	public Button getRefactor() {
 		return refactor;
 	}
 
-
-
 	public void setRefactor(Button refactor) {
 		this.refactor = refactor;
 	}
-
-
 
 	public Button getDisconnect() {
 		return disconnect;
 	}
 
-
-
 	public void setDisconnect(Button disconnect) {
 		this.disconnect = disconnect;
 	}
-
-
+	
 	public TableView<Stagiaire> getTable() {
 		return table;
 	}
-
 
 	public void setTable(TableView<Stagiaire> table) {
 		this.table = table;
@@ -356,33 +300,31 @@ public class VueMenu extends Scene {
 
 	public Button getRefresh() {
 	return refresh;
-}
+    }
 
-public void setRefresh(Button refresh) {
+   public void setRefresh(Button refresh) {
 	this.refresh = refresh;
-}
+    }
 
-public static ArrayList<Stagiaire> getListOrdreAlpha() {
+   public static ArrayList<Stagiaire> getListOrdreAlpha() {	
 	return ListOrdreAlpha;
-}
+   }
 
-public FilteredList<Stagiaire> getListFilt() {
+   public FilteredList<Stagiaire> getListFilt() {
 	return listFilt;
-}
+   }
 
-public void setListFilt(FilteredList<Stagiaire> listFilt) {
+   public void setListFilt(FilteredList<Stagiaire> listFilt) {
 	this.listFilt = listFilt;
-}
+   }
 
-public void setList(ObservableList<Stagiaire> list) {
+   public void setList(ObservableList<Stagiaire> list) {
 	this.list = list;
-}
+   }
 
-public void setListOrdreAlpha(ArrayList<Stagiaire>listOrdreAlpha) {
+   public void setListOrdreAlpha(ArrayList<Stagiaire>listOrdreAlpha) {
 	ListOrdreAlpha = listOrdreAlpha;
-}
+   }
 
-
-
-
+//////////////////////////////// FIN METHODES/////////////////////////////////////////////////////////
 		}

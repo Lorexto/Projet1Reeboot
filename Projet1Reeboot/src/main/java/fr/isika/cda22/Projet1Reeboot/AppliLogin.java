@@ -22,15 +22,17 @@ public VueFormulaire Formulaire;
 
     @Override
     public void start(Stage stage) throws FileNotFoundException, IOException {
-
-
+/////////////////////////////////////////
+///////////////Declaration des pages/
+////////////////////////////////////////    	
     	Login= new VueLogin();
        	vueMenu= new VueMenu();
     	Formulaire= new VueFormulaire();
 
-    	// Si on clique sur Valider
+//////////////////////////////////////////////////
+/////////// EVENT LOGIN//////////
+///////////////////////////////////////////////////    	
     	Login.getSubmit().setOnAction(eventAction ->{
-
     	try {
 
         	  if (LoginController.loginButton(Login.submit.getOnMouseClicked()))
@@ -40,7 +42,11 @@ public VueFormulaire Formulaire;
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-    	});    	
+    	});  
+////////////////////////////////////////////////////////////////////////
+/////////// EVENT AJOUT STAGIAIRE : REDIRECTION PAGE FORMULAIRE//////////
+//////////////////////////////////////////////////////////////////////// 
+ 
     	vueMenu.getAddButton().setOnAction(eventAction ->{
     		try {
 				ChangesController.Ajouter(vueMenu.addButton.getOnMouseClicked());
@@ -52,10 +58,12 @@ public VueFormulaire Formulaire;
 				e.printStackTrace();
 			}
     	});
-
+///////////////////////////////////////////////////////////////////
+///////////////EVENT AJOUT DANS LISTE ET RETOUR MENU//////
+///////////////////////////////////////////////////////////////////    	
+    	
     	Formulaire.getBtn().setOnAction(eventAction ->{
     		try {
-				//ChangesController.AddFormulaireToBIN(Formulaire.btn.getOnMouseClicked());
 				if(ChangesController.AddFormulaireToBIN(Formulaire.btn.getOnMouseClicked())) {
 					stage.setScene(vueMenu);
 				}
@@ -65,6 +73,9 @@ public VueFormulaire Formulaire;
 			}
 
     	});
+//////////////////////////////////////////////////
+/////////// EVENT REFRESH//////////
+///////////////////////////////////////////////////     	
     	vueMenu.getRefresh().setOnAction(eventAction ->{
     		
     		try {
@@ -78,6 +89,9 @@ public VueFormulaire Formulaire;
 			}
     
     	});
+///////////////////////////////////////////////////////////
+/////////// EVENT DECONNEXION ET RETOUR AU LOGIN//////////
+///////////////////////////////////////////////////////////     	
     	
     	vueMenu.getDisconnect().setOnAction(eventAction ->{
     		
@@ -92,6 +106,10 @@ public VueFormulaire Formulaire;
 				e.printStackTrace();
 			}
     	});
+
+//////////////////////////////////////////////////
+/////////// EVENT MODIFICATION STAGIAIRE//////////
+///////////////////////////////////////////////////     	
     	
 //    	vueMenu.getSearch().setOnAction(eventAction ->{
 //    		
@@ -105,8 +123,10 @@ public VueFormulaire Formulaire;
 //				e.printStackTrace();
 //			}
     //	});
+//////////////////////////////////////////////////
+/////////// EVENT SUPPRESSION//////////
+///////////////////////////////////////////////////     	
     	
-
         stage.setScene(Login);
         stage.setTitle("École ISIKA");
         stage.show();

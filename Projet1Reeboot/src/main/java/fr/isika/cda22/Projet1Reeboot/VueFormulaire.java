@@ -13,6 +13,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 
 public class VueFormulaire extends Scene {
+	
+////////////ATTRIBUTS///////////////	
     Button btn;
 	static TextField txtNom;
 	static TextField txtPrenom;
@@ -31,42 +33,34 @@ public class VueFormulaire extends Scene {
 		root.setPadding(new Insets(20)); //
 		root.setHgap(25);// espace entre label et champs remplissage (horizontal)
 		root.setVgap(15);// espace entre chaque label(vertical)
-		this.setRoot(root);// on crée la scene le conteneur principal qui contient tous les
-													// composants
-
+		this.setRoot(root);// 
+//////////////////////////////////////////////////////////////
+////////////////// LABELS ET TEXTFIELDS///////////////
+////////////////////////////////////////////////////////////////		
 		Label labelNom = new Label("Nom :");
 		labelNom.setFont(Font.font("Roboto",FontPosture.ITALIC, 12));
-
-		 txtNom = new TextField();
-		//txtNom.setPromptText("Nom");
-
+		txtNom = new TextField();
+		txtNom.setPromptText("Nom");
 		Label labelPrenom = new Label("Prénom :");
 		labelPrenom.setFont(Font.font("Roboto",FontPosture.ITALIC, 12));
-
 		txtPrenom = new TextField();
-	//	txtPrenom.setPromptText("Prénom");
-
+	    txtPrenom.setPromptText("Prénom");
 		Label labelDepartement = new Label("Département :");
 		labelDepartement.setFont(Font.font("Roboto",FontPosture.ITALIC, 12));
-
 		txtDepartement = new TextField();
-		//txtDepartement.setPromptText("Exemple : 75");
-
+		txtDepartement.setPromptText("Exemple : 75");
 		Label labelPromo = new Label("Promo :");
 		labelPromo.setFont(Font.font("Roboto",FontPosture.ITALIC, 12));
-
 		txtPromo = new TextField();
-		//txtPromo.setPromptText("Exemple : CDA 22");
-
-
+		txtPromo.setPromptText("Exemple : CDA 22");
 		Label labelAnnee = new Label("Année :");
 		labelAnnee.setFont(Font.font("Roboto",FontPosture.ITALIC, 12));
-
-		 txtAnnee = new TextField();
-	//	txtAnnee.setPromptText("Exemple : 2022");
-
+		txtAnnee = new TextField();
+		txtAnnee.setPromptText("Exemple : 2022");
 		btn = new Button("Valider");
 		retour= new Button("Retour au menu Principal");
+		
+//////////////// AJOUTS DANS LES CONTENEURS//////////////////		
 		root.add(labelNom, 0, 0);
 		root.add(txtNom, 1, 0);
 		root.add(labelPrenom, 0, 1);
@@ -82,6 +76,9 @@ public class VueFormulaire extends Scene {
 
 	}
 
+//////////////////////////////////////////////	
+///////GETTERS ET SETTERS	
+///////////////////////////////////////////////	
 	public Button getBtn() {
 		return btn;
 	}
@@ -89,18 +86,6 @@ public class VueFormulaire extends Scene {
 	public void setBtn(Button btn) {
 		this.btn = btn;
 	}
-
-// public void Valider (ActionEvent event) {
-//		// doit récuperer les champs de la vue formulaire
-//		String nom = txtNom.getText();
-//		String prenom = txtPrenom.getText();
-//		String dpt = txtDepartement.getText();
-//		String id = txtPromo.getText();
-//		String annee = txtAnnee.getText();
-//
-//		Stagiaire st = new Stagiaire(nom,prenom,dpt,id,annee);
-//
-//	}
 
  public Button getRetour() {
 		return retour;
@@ -152,34 +137,6 @@ public class VueFormulaire extends Scene {
 
 
 
-
+//////////////////////////////////////FIN METHODES/////////////////////////////////////////////////
 
 }
-
-//
-//		Arbre3 a = new Arbre3();
-//		// doit récuperer les champs de la vue formulaire
-//
-//		//Stagiaire st = new  ......
-//
-//		//cptNoeud = nb de st déjà là + 1
-//		int cptNoeud = 9999;
-//		n = new Noeud3(st, -1, -1, -1, cptNoeud); // on part toujours du parent racine
-//
-//		nParent = new Noeud3(st, -1, -1, -1, cptNoeud)
-//
-//		a.ajouter(n, nParent, raf);
-//	}
-
-
-
-
-
-
-
-
-
-
-
-
-

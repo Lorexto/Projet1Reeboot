@@ -22,21 +22,15 @@ public class Lanceur3 {
 				try {
 					RandomAccessFile raf = new RandomAccessFile("src/main/java/fr/isika/cda22/Projet1Reeboot/fichbinTEST3.bin", "rw");
 					raf.setLength(0);
-
 					n = readTxt(raf);
-
 					raf.close();
-
 
 		} catch (IOException e) {
 					e.printStackTrace();
 				}
-
 				System.out.println("");
 				System.out.println("");
 				System.out.println("");
-				//LectureBin.LectureBin();
-				System.out.println("HAHAHAHAHAHHAAHHA");
 				try {
 					RandomAccessFile raf = new RandomAccessFile("src/main/java/fr/isika/cda22/Projet1Reeboot/fichbinTEST3.bin", "rw");
 			     n.searchInBinFile(raf, "ROIGNANT");
@@ -54,8 +48,6 @@ public class Lanceur3 {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-
-
 
 				} // fin main// fin main
 
@@ -108,5 +100,5 @@ public class Lanceur3 {
 	}
 
 
-
+//////////////////////////////FIN LANCEUR////////////////////////////////
 } // fin lanceur2
