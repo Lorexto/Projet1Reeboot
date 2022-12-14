@@ -7,6 +7,9 @@ import java.util.function.Predicate;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.print.PageLayout;
+import javafx.print.PrinterJob;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -14,6 +17,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.transform.Scale;
 
 public class ChangesController {
 
@@ -73,7 +77,7 @@ private Object label;
 			System.out.println("Veuillez entrer des donnees correctes");
             Alert msg = new Alert(AlertType.WARNING);
             msg.setTitle("Informations incompletes");
-            msg.setContentText("Veuillez TOUS les champs d'informations pour l'enregistrement du nouveau stagiaire, ou retournez a la page principale");
+            msg.setContentText("Veuillez remplir TOUS les champs, ou retournez au menu principal");
             msg.showAndWait();
 			return false;
 		}
@@ -90,9 +94,15 @@ private Object label;
 	///////////MODIFICATION DONNEES STAGIAIRE////////////////////////
 ///////////////////////////////////////////////////////////////////////////////	
 	public static boolean Modifier( EventHandler<? super MouseEvent> eventHandler) throws IOException{
-		
-		
-		return true;
+		if(VueMenu.table.getSelectionModel().isEmpty()!=true) {
+		return true;}
+		else {
+			 Alert msg = new Alert(AlertType.ERROR);
+	            msg.setTitle("SELECTION VIDE");
+	            msg.setContentText("Veuillez selectionner un stagiaire ");
+	            msg.showAndWait();
+			
+		return false;}
 
 	}
 ///////////////////////////////////////////////////////////////////////////////
@@ -132,16 +142,23 @@ public  static boolean Deconnexion( EventHandler<? super MouseEvent> eventHandle
 public static boolean Delete( EventHandler<? super MouseEvent> eventHandler) throws IOException{
 	
 	RandomAccessFile raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet1Reeboot/fichbinTEST3.bin", "rw");
-	
+	if(VueMenu.table.getSelectionModel().isEmpty()!=true){
 	Stagiaire selection= VueMenu.table.getSelectionModel().getSelectedItem();
 	System.out.println(VueMenu.table.getSelectionModel().getSelectedItem());
 	System.out.println(selection.getNom());
 	Noeud3 aEffacer =Noeud3.searchInBinFile(raf, selection.getNom().toUpperCase());	
 	Noeud3.SupprimerNoeudStagiaireV2(aEffacer, raf) ;	
-		
+	raf.close();
+	return true;}
 	
-	return true;
-	
+	else {
+		 Alert msg = new Alert(AlertType.WARNING);
+           msg.setTitle("SELECTION VIDE");
+           msg.setContentText("Veuillez selectionner un stagiaire ");
+           msg.showAndWait();
+           raf.close();
+	return false;
+	}
 	
 }
 
@@ -160,6 +177,8 @@ public static boolean Retour( EventHandler<? super MouseEvent> eventHandler) thr
 ////////////////////////////////////////////////////////////////////
 public static boolean Modifications( EventHandler<? super MouseEvent> eventHandler) throws IOException{
 
+	if(VueMenu.table.getSelectionModel().isEmpty()!=true)  {
+	
 	Stagiaire selection= VueMenu.table.getSelectionModel().getSelectedItem();
 	VueModification.labelNom.setText(String.valueOf( selection.getNom()));     
 	VueModification.labelPrenom.setText(String.valueOf( selection.getPrenom()));
@@ -171,7 +190,11 @@ RandomAccessFile raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet1
 System.out.println(VueMenu.table.getSelectionModel().getSelectedItem());
 System.out.println(selection.getNom());
 
+	return true;}
 	return true;
+	
+	
+	
 }
 /////////////////////////////////////////////////////////////////////
 /////////////////////// MODIFICATION STAGIAIRES DANS BIN/////////////
@@ -183,9 +206,9 @@ RandomAccessFile raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet1
 Stagiaire selection= VueMenu.table.getSelectionModel().getSelectedItem();
 
 String nom = VueModification.getTxtNomR().getText().toUpperCase();
-String prenom=VueModification.getTxtPrenomR().getText().substring(0, 1).toUpperCase() + VueModification.getTxtPrenomR().getText().substring(1);
-String id=VueModification.getTxtPromoR().getText();
+String prenom=VueModification.getTxtPrenomR().getText();
 String dpt=VueModification.getTxtDepartementR().getText();
+String id=VueModification.getTxtPromoR().getText();
 String annee=VueModification.getTxtAnneeR().getText();
 
 if(nom=="") {
@@ -194,12 +217,13 @@ if(nom=="") {
 if(prenom=="") {
 	prenom= selection.getPrenom();
 }
-if(id=="") {
-	id= selection.getId();
-}
 if(dpt=="") {
 	dpt= selection.getDpt();
 }
+if(id=="") {
+	id= selection.getId();
+}
+
 if(annee=="") {
 	annee= selection.getAnnee();
 }
@@ -223,14 +247,36 @@ else {
     msg.showAndWait();
     Optional<ButtonType> option = msg.showAndWait();
 	
-	return false;
+	return true;
 }
 
 }
 /////////////////////////////////////////////////////////////////////
-/////////////////////// RETOUR AU MENU PRINCIPAL /////////////
+/////////////////////// PRINT TO PDF /////////////
 ////////////////////////////////////////////////////////////////////
 
+public static void print(Node node) {
+	PrinterJob PrintToPDF = PrinterJob.createPrinterJob();	
+	 if (PrintToPDF != null && PrintToPDF.showPrintDialog(null)) {
+	  PageLayout pageLayout = PrintToPDF.getJobSettings().getPageLayout();
+	  double scaleX = 1.0;
+	  if (pageLayout.getPrintableWidth() < node.getBoundsInParent().getWidth()) {
+	   scaleX = pageLayout.getPrintableWidth() / node.getBoundsInParent().getWidth();
+	  }
+	  double scaleY = 1.0;
+	  if (pageLayout.getPrintableHeight() < node.getBoundsInParent().getHeight()) {
+	   scaleY = pageLayout.getPrintableHeight() / node.getBoundsInParent().getHeight();
+	  }
+	  double scaleXY = Double.min(scaleX, scaleY);
+	  Scale scale = new Scale(scaleXY, scaleXY);
+	  node.getTransforms().add(scale);
+	  boolean success = PrintToPDF.printPage(node);
+	  node.getTransforms().remove(scale);
+	  if (success) {
+		  PrintToPDF.endJob();
+	  }
+	 }
+	}
 
 
 

@@ -93,10 +93,6 @@ public class VueMenu extends Scene {
 		searchBar= new TextField(); 
 		
 		
-		
-		
-		
-		
 //////////////////////////////////////////////////////////
 ////// TABLE VIEW SET UP//////////
 /////////////////////////////////////////////////////////   
@@ -109,17 +105,17 @@ public class VueMenu extends Scene {
         nomCol.setMinWidth(100);
         nomCol.setCellValueFactory(new PropertyValueFactory<>("nom"));
         TableColumn<Stagiaire, String> prenomCol = new TableColumn<>("Prénom");
-        prenomCol.setMinWidth(100);
+        prenomCol.setMinWidth(100); 
+        TableColumn<Stagiaire, String> promoCol = new TableColumn<>("Département");
+        promoCol.setMinWidth(50);
+        promoCol.setCellValueFactory(new PropertyValueFactory<>("dpt"));
+        TableColumn<Stagiaire, String> dptCol = new TableColumn<>("Promo");
+        dptCol.setMinWidth(50);
+        dptCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         prenomCol.setCellValueFactory(new PropertyValueFactory<>("prenom"));
         TableColumn<Stagiaire, String> anneeCol = new TableColumn<>("Année");
         anneeCol.setMinWidth(50);
         anneeCol.setCellValueFactory(new PropertyValueFactory<>("annee"));
-        TableColumn<Stagiaire, String> promoCol = new TableColumn<>("Promo");
-        promoCol.setMinWidth(50);
-        promoCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-        TableColumn<Stagiaire, String> dptCol = new TableColumn<>("Département");
-        dptCol.setMinWidth(50);
-        dptCol.setCellValueFactory(new PropertyValueFactory<>("dpt"));
         table.getColumns().addAll(nomCol,prenomCol,anneeCol,promoCol,dptCol);
 /////////////////////////////////////////////////////////////////////////////////
 /////////////////FILTER SET UP////////////////////////
@@ -206,7 +202,7 @@ public class VueMenu extends Scene {
 //
 //			Stagiaire st1 = new Stagiaire("LACROIX","Kim", "CDA", "98", "2012");
 //			Stagiaire st2 = new Stagiaire("CHAVENEAU","Alex","AL", "98","2012");
-			Stagiaire st3 = new Stagiaire("BON","Jean","AL", "38", "2014");
+			Stagiaire st3 = new Stagiaire("BON","Jean","38", "AL", "2014");
 			ObservableList<Stagiaire> list = FXCollections.observableArrayList(st3);
 
 			try {
@@ -217,12 +213,13 @@ public class VueMenu extends Scene {
 				Noeud3 nCourant = Noeud3.lireParentSuivant(i, raf);
 				String nom = nCourant.getCle().getNomLong().split("\\*")[0];
 				String prenom = nCourant.getCle().getPrenomLong().split("\\*")[0];
-				String id = nCourant.getCle().getId().split("\\*")[0];
 				String dpt = nCourant.getCle().getDpt().split("\\*")[0];
+				String id = nCourant.getCle().getId().split("\\*")[0];
 				String annee = nCourant.getCle().getAnnee().split("\\*")[0];
-				Stagiaire newSt = new Stagiaire(nom, prenom, id, dpt, annee);
+				Stagiaire newSt = new Stagiaire(nom, prenom, dpt, id, annee);
 				if(nCourant.getNumeroNoeud()>=0 ) {
 				list.add(newSt);
+				
 				}
 			}
 

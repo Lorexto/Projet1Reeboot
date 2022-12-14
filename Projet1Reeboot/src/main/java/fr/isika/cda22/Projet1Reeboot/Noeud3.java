@@ -270,71 +270,6 @@ public class Noeud3 {
 		return null;
 
 	}
-////////////////////////////////////// LECTURE BIN POUR ECRITURE APPLI
-	public static Noeud3 lireParentSuivantAppli(int numNoeudALire, RandomAccessFile raf) throws EOFException {
-
-		try {
-			while(numNoeudALire<= raf.length()/132) {
-				
-				
-			raf.seek((numNoeudALire * TAILLE_NOEUD)+TAILLE_IND_FG+TAILLE_IND_FD+TAILLE_IND_DBL);
-			int numNoeudALireConstat= raf.readInt();
-			
-			if (numNoeudALireConstat>0) {
-			raf.seek(numNoeudALire*TAILLE_NOEUD);
-			//System.out.println("dans le lire" + (int)raf.getFilePointer());
-				String nom = "";
-				for(int i = 0; i < 20 ; i++) {
-					nom += raf.readChar();
-				}
-				String prenom = "";
-				for(int i = 0; i < 20 ; i++) {
-					prenom += raf.readChar();
-				}
-				String dpt = "";
-				for(int i = 0; i < 4 ; i++) {
-					dpt += raf.readChar();
-				}
-				String id = "";
-				for(int i = 0; i < 10 ; i++) {
-					id += raf.readChar();
-				}
-				String annee = "";
-				for(int i = 0; i < 4 ; i++) {
-					annee += raf.readChar();
-				}
-//////////////////// LIRE les indices//////////////////////////////
-				int FG = raf.readInt();
-				int FD = raf.readInt();
-				int DBL = raf.readInt();
-				int NumNoeud = raf.readInt();
-         
-				Stagiaire st = new Stagiaire(nom, prenom, dpt, id, annee);
-				Noeud3 n = new Noeud3(st, FG, FD, DBL, NumNoeud);
-				return n;
-			}
-			else {
-					
-				int position=(int)raf.getFilePointer();
-					System.out.println(position);
-				
-				}
-				//raf.close();
-				//System.out.println("nouveau parent : " + n);
-				return null;
-				}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-		return null;
-
-	}
-	
-	
-	
-	
 
 /////////////////////////LIRE NOM BIN//////////////////////////////////////////
 
@@ -467,6 +402,7 @@ public static Noeud3 searchInBinFile(RandomAccessFile raf, String nomRech) throw
 	        if(DBL!=-1) {
 	        	System.out.println("Autres FD TROUVES");
 	        	raf.seek(DBL*132);
+	        	
 	        }
 			return n2;	}
 		}
@@ -621,10 +557,11 @@ public static Noeud3 SupprimerNoeudStagiaireV2(Noeud3 aEffacer,RandomAccessFile 
 		searchInBinFile(raf, aEffacer.getCle().getNomLong()).getNumeroNoeud();
 		aEffacer.getFilsDroit();
 		aEffacer.getFilsGauche();
+		
 		raf.seek(aEffacer.numeroNoeud*132);
-		   if(aEffacer==null) {
-			   System.out.println("Element inexistant");
-			   return null;}  //
+//		   if(aEffacer==null) {
+//			   System.out.println("Element inexistant");
+//			   return null;}  //
 
 		   if(aEffacer.filsGauche==-1 && aEffacer.filsDroit==-1) { // SUPPRESSION FEUILLE
 			   int positionElement=aEffacer.numeroNoeud*132; //position de l'element a supprimer
@@ -641,6 +578,7 @@ public static Noeud3 SupprimerNoeudStagiaireV2(Noeud3 aEffacer,RandomAccessFile 
 					aEffacer.setCle(predecesseur(aEffacer, raf).cle);
 					aEffacer= SupprimerNoeudStagiaireV2(lireParentSuivant(aEffacer.filsGauche, raf), raf);
 				}
+		
 	       return aEffacer;
 	}
 	catch (IOException e) {

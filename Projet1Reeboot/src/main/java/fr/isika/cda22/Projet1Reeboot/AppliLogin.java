@@ -3,9 +3,13 @@ package fr.isika.cda22.Projet1Reeboot;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
 
@@ -117,7 +121,14 @@ public VueModification VModif;
 				try {
 				if(ChangesController.Modifications(vueMenu.refactor.getOnMouseClicked())&&vueMenu.table.getSelectionModel().isEmpty()!=true) {
 						stage.setScene(VModif);
-				}	
+				}
+				else {
+					Alert msg = new Alert(AlertType.WARNING);
+				    msg.setTitle("ATTENTION");
+				    msg.setContentText("VEUILLEZ SELECTIONNER UN STAGIAIRE");
+				   // msg.showAndWait();
+				    Optional<ButtonType> option = msg.showAndWait();	
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();}
@@ -168,7 +179,7 @@ e.printStackTrace();
     	});
     	
 /////////////////////////////////////////////////
-/////////// EVENT NODIFICATION//////////
+/////////// EVENT MODIFICATION//////////
 ///////////////////////////////////////////////////
    VModif.getValiderModifs().setOnAction(eventAction ->{
    
@@ -183,14 +194,20 @@ e.printStackTrace();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();}		
-	
 });
+/////////////////////////////////////////////////
+/////////// EVENT TO PRINT//////////
+/////////////////////////////////////////////////// 
+   vueMenu.getPrint().setOnAction(eventAction ->{
+
+	   ChangesController.print(VueMenu.table);
+	
+		        stage.setScene(vueMenu);		
+	});  
+	  
    
    	
-    	
-    	
-    	
-////////////////////////////////////////////////    	
+/////////////////////////FIN DES EVENTS ///////////////////////    	
     	
     	
         stage.setScene(Login);
