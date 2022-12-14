@@ -19,6 +19,7 @@ public class AppliLogin extends Application {
 	public ChangesController controlleur;
 public VueMenu vueMenu;
 public VueFormulaire Formulaire;
+public VueModification VModif;
 
     @Override
     public void start(Stage stage) throws FileNotFoundException, IOException {
@@ -28,7 +29,7 @@ public VueFormulaire Formulaire;
     	Login= new VueLogin();
        	vueMenu= new VueMenu();
     	Formulaire= new VueFormulaire();
-
+    	VModif= new VueModification();
 //////////////////////////////////////////////////
 /////////// EVENT LOGIN//////////
 ///////////////////////////////////////////////////    	
@@ -52,7 +53,7 @@ public VueFormulaire Formulaire;
 				ChangesController.Ajouter(vueMenu.addButton.getOnMouseClicked());
 				if(ChangesController.Ajouter(vueMenu.addButton.getOnMouseClicked()))
 					stage.setScene(Formulaire);
-					System.out.println("ne veut pas s'ouvrir");
+					
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -110,10 +111,21 @@ public VueFormulaire Formulaire;
 //////////////////////////////////////////////////
 /////////// EVENT MODIFICATION STAGIAIRE//////////
 ///////////////////////////////////////////////////     	
-    	
+
+    	vueMenu.getRefactor().setOnAction(eventAction ->{
+    		 
+				try {
+				if(ChangesController.Modifications(vueMenu.refactor.getOnMouseClicked())&&vueMenu.table.getSelectionModel().isEmpty()!=true) {
+						stage.setScene(VModif);
+				}	
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();}
+			
+    	});
 
 //////////////////////////////////////////////////
-/////////// EVENT RETOUR//////////
+/////////// EVENT RETOUR FROM FORM//////////
 ///////////////////////////////////////////////////   
     	Formulaire.getRetour().setOnAction(eventAction ->{
     		try {
@@ -125,7 +137,19 @@ public VueFormulaire Formulaire;
 				e.printStackTrace();
 			}
     	});    	
-    	
+//////////////////////////////////////////////////
+/////////// EVENT RETOUR FROM MODIF FORM//////////
+///////////////////////////////////////////////////   
+    	VModif.getRetour2().setOnAction(eventAction ->{
+try {
+if(ChangesController.Retour(VModif.retour2.getOnMouseClicked())==true) {
+stage.setScene(vueMenu);
+}
+} catch (IOException e) {
+// TODO Auto-generated catch block
+e.printStackTrace();
+}
+}); 
 /////////////////////////////////////////////////
 /////////// EVENT SUPPRESSION//////////
 ///////////////////////////////////////////////////
@@ -142,6 +166,27 @@ public VueFormulaire Formulaire;
 						e.printStackTrace();		
 			}
     	});
+    	
+/////////////////////////////////////////////////
+/////////// EVENT NODIFICATION//////////
+///////////////////////////////////////////////////
+   VModif.getValiderModifs().setOnAction(eventAction ->{
+   
+   try {
+		
+		if(ChangesController.SubmitChanges(VModif.ValiderModifs.getOnMouseClicked())) {
+			        
+			        stage.setScene(vueMenu);
+					VueMenu.table.setItems(VueMenu.getContactList());
+					VueMenu.table.refresh();}
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();}		
+	
+});
+   
+   	
     	
     	
     	

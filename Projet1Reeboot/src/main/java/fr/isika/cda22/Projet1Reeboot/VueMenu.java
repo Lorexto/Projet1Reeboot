@@ -50,7 +50,7 @@ public class VueMenu extends Scene {
 //////////////////////////////////////////
 	GridPane VueMenu;
 	StackPane listeStagiaires;
-	Button search;
+	Button print;
 	Button addButton;
 	static Button delete;
 	Button refactor;
@@ -77,7 +77,7 @@ public class VueMenu extends Scene {
 ////////////////////////////////////////////////////
 ////////////BOUTONS et FIELDS
 ///////////////////////////////////////////////////		
-		search = new Button ("RECHERCHE");
+		print = new Button ("IMPRIMER");
 	    addButton = new Button ("AJOUTER");
 		delete= new Button("SUPPRIMER");
 		refactor= new Button("MODIFIER");
@@ -85,7 +85,7 @@ public class VueMenu extends Scene {
 		refresh= new Button ("RAFRAICHIR LA PAGE");
 		//HBOX et INSERTON BOUTONS
 		HBox ConteneurBoutons= new HBox();
-		ConteneurBoutons.getChildren().add(0, search);
+		ConteneurBoutons.getChildren().add(0, print);
 		ConteneurBoutons.getChildren().add(1, addButton);
 		ConteneurBoutons.getChildren().add(2, delete);
 		ConteneurBoutons.getChildren().add(3, refactor);
@@ -171,25 +171,6 @@ public class VueMenu extends Scene {
 /////////////////////////////////////TABLEVIEW SELECTOR/////////////////////////        
         table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         
-//        table.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Stagiaire>() ->{
-//        	public void changed(ObservableValue<? extends Stagiaire> observable, Stagiaire oldValue, String newValue) {
-//                //Check whether item is selected and set value of selected item to Label
-//                if(table.getSelectionModel().getSelectedItem() != null) 
-//                {    
-//                   TableViewSelectionModel<Stagiaire> selectionModel = table.getSelectionModel();
-//                   ObservableList<Stagiaire> selectedCells = selectionModel.getSelectedCells();
-//                   TablePosition<Object, ?> tablePosition = (TablePosition<Object, ?>) selectedCells.get(0);
-//                   Stagiaire Stag = (Stagiaire) tablePosition.getTableColumn().getCellData(newValue);
-//                   System.out.println("stagiaire selectionne"+Stag.getNom());
-//                 }
-//                 }
-//
-//			
-//			
-//             });
-//        
-        
-        
         
 ////////////////////////////AJOUT ELEMENTS DANS LE TAABLE VIEW////////////////////////////////
         SortedList<Stagiaire> ResultatsTris= new SortedList<>(listFilt);
@@ -270,8 +251,9 @@ public class VueMenu extends Scene {
 		    }
 		    return FXCollections.observableList(filteredList);
 		}
-///////////////////////////////////////////
-		
+//////////////////////////////////////////////////////////
+	////////SI JAMAIS ON VEU EFFACER PLUSIEURS SELECTIONS
+///////////////////////////////////////////////////////////		
 		 private void deleteButtonClicked() {
 		        table.getItems().removeAll(
 		                table.getSelectionModel().getSelectedItems()
@@ -299,12 +281,12 @@ public class VueMenu extends Scene {
 		this.listeStagiaires = listeStagiaires;
 	}
 
-	public Button getSearch() {
-		return search;
+	public Button getPrint() {
+		return print;
 	}
 
-	public void setSearch(Button search) {
-		this.search = search;
+	public void setPrint(Button search) {
+		this.print = search;
 	}
 
 	public Button getAddButton() {

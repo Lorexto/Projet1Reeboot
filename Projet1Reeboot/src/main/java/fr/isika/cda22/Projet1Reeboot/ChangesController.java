@@ -136,8 +136,8 @@ public static boolean Delete( EventHandler<? super MouseEvent> eventHandler) thr
 	Stagiaire selection= VueMenu.table.getSelectionModel().getSelectedItem();
 	System.out.println(VueMenu.table.getSelectionModel().getSelectedItem());
 	System.out.println(selection.getNom());
-		Noeud3 aEffacer =	Noeud3.searchInBinFile(raf, selection.getNom().toUpperCase());	
-		Noeud3.SupprimerNoeudStagiaireV2(aEffacer, raf) ;	
+	Noeud3 aEffacer =Noeud3.searchInBinFile(raf, selection.getNom().toUpperCase());	
+	Noeud3.SupprimerNoeudStagiaireV2(aEffacer, raf) ;	
 		
 	
 	return true;
@@ -155,9 +155,88 @@ public static boolean Retour( EventHandler<? super MouseEvent> eventHandler) thr
 	return true;
 	
 }
+/////////////////////////////////////////////////////////////////////
+/////////////////////// MODIFICATION STAGIAIRES : OVERTURE FENETRE/////////////
+////////////////////////////////////////////////////////////////////
+public static boolean Modifications( EventHandler<? super MouseEvent> eventHandler) throws IOException{
+
+	Stagiaire selection= VueMenu.table.getSelectionModel().getSelectedItem();
+	VueModification.labelNom.setText(String.valueOf( selection.getNom()));     
+	VueModification.labelPrenom.setText(String.valueOf( selection.getPrenom()));
+	VueModification.labelDepartement.setText(String.valueOf( selection.getDpt()));
+	VueModification.labelPromo.setText(String.valueOf( selection.getId()));
+	VueModification.labelAnnee.setText(String.valueOf( selection.getAnnee()));	
+RandomAccessFile raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet1Reeboot/fichbinTEST3.bin", "rw");
+
+System.out.println(VueMenu.table.getSelectionModel().getSelectedItem());
+System.out.println(selection.getNom());
+
+	return true;
+}
+/////////////////////////////////////////////////////////////////////
+/////////////////////// MODIFICATION STAGIAIRES DANS BIN/////////////
+////////////////////////////////////////////////////////////////////
+public static boolean SubmitChanges( EventHandler<? super MouseEvent> eventHandler) throws IOException{
+	
+RandomAccessFile raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet1Reeboot/fichbinTEST3.bin", "rw");
+
+Stagiaire selection= VueMenu.table.getSelectionModel().getSelectedItem();
+
+String nom = VueModification.getTxtNomR().getText().toUpperCase();
+String prenom=VueModification.getTxtPrenomR().getText().substring(0, 1).toUpperCase() + VueModification.getTxtPrenomR().getText().substring(1);
+String id=VueModification.getTxtPromoR().getText();
+String dpt=VueModification.getTxtDepartementR().getText();
+String annee=VueModification.getTxtAnneeR().getText();
+
+if(nom=="") {
+	nom= selection.getNom();
+}
+if(prenom=="") {
+	prenom= selection.getPrenom();
+}
+if(id=="") {
+	id= selection.getId();
+}
+if(dpt=="") {
+	dpt= selection.getDpt();
+}
+if(annee=="") {
+	annee= selection.getAnnee();
+}
+
+
+Stagiaire Remplacement= new Stagiaire(nom, prenom, dpt, id, annee);
+
+Noeud3 aEffacer =	Noeud3.searchInBinFile(raf, selection.getNom());
+if (aEffacer.getCle()!=Remplacement) {
+	
+Noeud3 Nremplacement= new Noeud3(Remplacement, -1, -1, -1, (int)raf.length()/132);
+Noeud3.ajouterStagiaire(Nremplacement, Noeud3.lireParentSuivant(0, raf), raf);
+Noeud3.SupprimerNoeudStagiaireV2(aEffacer, raf);
+VueMenu.table.refresh();
+return true;
+}
+else {
+	Alert msg = new Alert(AlertType.WARNING);
+    msg.setTitle("ATTENTION");
+    msg.setContentText("Vous n'avez pas modifié les informations relatives a ce stagiaire");
+    msg.showAndWait();
+    Optional<ButtonType> option = msg.showAndWait();
+	
+	return false;
+}
+
+}
+/////////////////////////////////////////////////////////////////////
+/////////////////////// RETOUR AU MENU PRINCIPAL /////////////
+////////////////////////////////////////////////////////////////////
 
 
 
-//////////////////////////////////////////////////////////////////////////////
 
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////FIN METHODES//////////////////////////////////////////////
 }
