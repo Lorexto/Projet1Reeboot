@@ -111,21 +111,42 @@ public VueFormulaire Formulaire;
 /////////// EVENT MODIFICATION STAGIAIRE//////////
 ///////////////////////////////////////////////////     	
     	
-//    	vueMenu.getSearch().setOnAction(eventAction ->{
-//    		
-//    		try {
-//				if(ChangesController.searchRequest(vueMenu.search.getOnMouseClicked())==true) {
-//					
-//					
-//				}
-//    		} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-    //	});
+
 //////////////////////////////////////////////////
+/////////// EVENT RETOUR//////////
+///////////////////////////////////////////////////   
+    	Formulaire.getRetour().setOnAction(eventAction ->{
+    		try {
+				if(ChangesController.Retour(Formulaire.retour.getOnMouseClicked())==true) {
+					stage.setScene(vueMenu);
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	});    	
+    	
+/////////////////////////////////////////////////
 /////////// EVENT SUPPRESSION//////////
-///////////////////////////////////////////////////     	
+///////////////////////////////////////////////////
+    	vueMenu.getDelete().setOnAction(eventAction ->{
+    		try {
+				
+				if(ChangesController.Delete(VueMenu.delete.getOnMouseClicked()))
+					stage.setScene(vueMenu);
+							VueMenu.table.setItems(VueMenu.getContactList());
+							VueMenu.table.refresh();
+						
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();		
+			}
+    	});
+    	
+    	
+    	
+////////////////////////////////////////////////    	
+    	
     	
         stage.setScene(Login);
         stage.setTitle("École ISIKA");

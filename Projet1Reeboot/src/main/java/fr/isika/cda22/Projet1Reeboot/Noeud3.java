@@ -21,7 +21,7 @@ public class Noeud3 {
 	public final static int TAILLE_IND_FD = 4;
 	public final static int TAILLE_IND_DBL = 4;
 	public final static int TAILLE_NUM_NOEUD = 4; // 1 int 4 octets
-	public final static int TAILLE_NOEUD = TAILLE_CLE_OCTET + TAILLE_IND_FG + TAILLE_IND_FD + TAILLE_IND_DBL + TAILLE_NUM_NOEUD; // 128
+	public final static int TAILLE_NOEUD = TAILLE_CLE_OCTET + TAILLE_IND_FG + TAILLE_IND_FD + TAILLE_IND_DBL + TAILLE_NUM_NOEUD; // 132
 
 	///////////////////////// attributs///////////////////////////////////////
 	private Stagiaire cle;
@@ -270,10 +270,75 @@ public class Noeud3 {
 		return null;
 
 	}
+////////////////////////////////////// LECTURE BIN POUR ECRITURE APPLI
+	public static Noeud3 lireParentSuivantAppli(int numNoeudALire, RandomAccessFile raf) throws EOFException {
+
+		try {
+			while(numNoeudALire<= raf.length()/132) {
+				
+				
+			raf.seek((numNoeudALire * TAILLE_NOEUD)+TAILLE_IND_FG+TAILLE_IND_FD+TAILLE_IND_DBL);
+			int numNoeudALireConstat= raf.readInt();
+			
+			if (numNoeudALireConstat>0) {
+			raf.seek(numNoeudALire*TAILLE_NOEUD);
+			//System.out.println("dans le lire" + (int)raf.getFilePointer());
+				String nom = "";
+				for(int i = 0; i < 20 ; i++) {
+					nom += raf.readChar();
+				}
+				String prenom = "";
+				for(int i = 0; i < 20 ; i++) {
+					prenom += raf.readChar();
+				}
+				String dpt = "";
+				for(int i = 0; i < 4 ; i++) {
+					dpt += raf.readChar();
+				}
+				String id = "";
+				for(int i = 0; i < 10 ; i++) {
+					id += raf.readChar();
+				}
+				String annee = "";
+				for(int i = 0; i < 4 ; i++) {
+					annee += raf.readChar();
+				}
+//////////////////// LIRE les indices//////////////////////////////
+				int FG = raf.readInt();
+				int FD = raf.readInt();
+				int DBL = raf.readInt();
+				int NumNoeud = raf.readInt();
+         
+				Stagiaire st = new Stagiaire(nom, prenom, dpt, id, annee);
+				Noeud3 n = new Noeud3(st, FG, FD, DBL, NumNoeud);
+				return n;
+			}
+			else {
+					
+				int position=(int)raf.getFilePointer();
+					System.out.println(position);
+				
+				}
+				//raf.close();
+				//System.out.println("nouveau parent : " + n);
+				return null;
+				}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		return null;
+
+	}
+	
+	
+	
+	
 
 /////////////////////////LIRE NOM BIN//////////////////////////////////////////
 
-public String lireNom(int numNoeudALire, RandomAccessFile raf) throws EOFException {
+public static String lireNom(int numNoeudALire, RandomAccessFile raf) throws EOFException {
 	String nom="";
 	try {
 		raf.seek(numNoeudALire * TAILLE_NOEUD);
@@ -289,10 +354,11 @@ public String lireNom(int numNoeudALire, RandomAccessFile raf) throws EOFExcepti
 /////////////////////////////////////////////////////////////////
 ///////////////////////LIRE FD BIN////////////////////////////////////////////
 
-public int lireFD(int numNoeudALire, RandomAccessFile raf) throws EOFException {
+public static int lireFD(int numNoeudALire, RandomAccessFile raf) throws EOFException {
 int FD=-1;
 try {
 	System.out.println(numNoeudALire);
+while(numNoeudALire<(int)raf.length()/132)	{
 raf.seek((numNoeudALire * 132)+TAILLE_CLE_OCTET+TAILLE_IND_FG);
 System.out.println("Position curseur :  " + (int)raf.getFilePointer());
 FD = raf.readInt();
@@ -300,7 +366,7 @@ System.out.println(FD+"---");
 System.out.println(FD+"FD+++");
 
 return FD;
-
+}
 }catch (IOException e) {
 e.printStackTrace();
 }
@@ -308,7 +374,7 @@ return FD;
 }
 
 ///////////////////////LIRE FG BIN//////////////////////////////////////////
-public int lireFG(int numNoeudALire, RandomAccessFile raf) throws EOFException {
+public static int lireFG(int numNoeudALire, RandomAccessFile raf) throws EOFException {
 int FG=-1;
 
 try {
@@ -325,7 +391,7 @@ return FG;
 
 }
 ///////////////////////LIRE DOUBLONS BIN///////////////////////////////////
-public int lireDBL(int numNoeudALire, RandomAccessFile raf) throws EOFException {
+public static int lireDBL(int numNoeudALire, RandomAccessFile raf) throws EOFException {
 int DBL=-1;
 
 try {
@@ -346,7 +412,7 @@ return DBL;
 ///////////////////////////////////////////////////////
 
 		//@SuppressWarnings("unused")
-public Noeud3 searchInBinFile(RandomAccessFile raf, String nomRech) throws IOException {
+public static Noeud3 searchInBinFile(RandomAccessFile raf, String nomRech) throws IOException {
 	try {
 		raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet1Reeboot/fichbinTEST3.bin", "rw");
 		int sizeFile= (int) raf.length();
@@ -365,6 +431,7 @@ public Noeud3 searchInBinFile(RandomAccessFile raf, String nomRech) throws IOExc
 
 		for(h=0;h<sizeFile;h++) {
 		// on compare la lecture des noms du fichierBIN avec le nom recherche
+			
 		if(lireNom(h, raf).compareTo(nomRech)==0){
 ///////// LECTRURE PRENOMS DPT ID ANNEE FG FD DBL POS///////////
 			String prenomBIN = "";
@@ -413,7 +480,7 @@ public Noeud3 searchInBinFile(RandomAccessFile raf, String nomRech) throws IOExc
 ///////////////////////////////////////////////////
 //	TROUVE ET ECRIT LES SUCCESSEURS DANS LE FICHIER BIN
 //////////////////////////////////////////////////
-public Noeud3 successeur(Noeud3 n,RandomAccessFile raf) throws IOException {
+public static Noeud3 successeur(Noeud3 n,RandomAccessFile raf) throws IOException {
 
 
 int PositionARemplacer= ((int) raf.getFilePointer());
@@ -455,7 +522,7 @@ return n;
 //TROUVE ET ECRIT LES PREDECESSEURS DANS LE FICHIER BIN
 //////////////////////////////////////////////////
 
-public Noeud3 predecesseur(Noeud3 n,RandomAccessFile raf) throws IOException {
+public static Noeud3 predecesseur(Noeud3 n,RandomAccessFile raf) throws IOException {
 int PositionARemplacer= ((int) raf.getFilePointer());
 n= lireParentSuivant(n.filsGauche, raf);
 raf.seek(n.getNumeroNoeud());
@@ -495,7 +562,7 @@ return n;
 /////////////////////////////////////////////////
 ///// METHODE REMPLACER STRINGS DANS BIN
 ////////////////////////////////////////////////////
-private void RemplaceString(int PositionARemplacer, String donneeARemplacer, RandomAccessFile raf) {
+private static void RemplaceString(int PositionARemplacer, String donneeARemplacer, RandomAccessFile raf) {
 try {
 raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet1Reeboot/fichbinTEST3.bin", "rw");
 raf.seek(PositionARemplacer);
@@ -507,7 +574,7 @@ e.printStackTrace();}
 /////////////////////////////////////////////////////////////////////////////////////
 //////// MODIFIER LES INDICES DU PERE POUR LA SUPPRESSION DE FEUILLE////
 ////////////////////////////////////////////////////////////////////////////////////
-public Noeud3 modifFilsPere(Noeud3 n,RandomAccessFile raf) throws IOException {
+public static Noeud3 modifFilsPere(Noeud3 n,RandomAccessFile raf) throws IOException {
 	try {
 		raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet1Reeboot/fichbinTEST3.bin", "rw");
 		int sizeFile= (int) raf.length();
@@ -548,7 +615,7 @@ public Noeud3 modifFilsPere(Noeud3 n,RandomAccessFile raf) throws IOException {
 //////////////////////////////////////////////////////////////////////////////
 //////////////////METHODE POUR SUPPRIMER NOEUD FICHIER BIN/////////////
 ///////////////////////////////////////////////////////////////////////////
-public Noeud3 SupprimerNoeudStagiaireV2(Noeud3 aEffacer,RandomAccessFile raf) {
+public static Noeud3 SupprimerNoeudStagiaireV2(Noeud3 aEffacer,RandomAccessFile raf) {
 	try {
 		raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet1Reeboot/fichbinTEST3.bin", "rw");
 		searchInBinFile(raf, aEffacer.getCle().getNomLong()).getNumeroNoeud();

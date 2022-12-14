@@ -73,7 +73,7 @@ public class MultiSelectTableView<S> extends TableView<Stagiaire> {
             _selectedIndices.add(index);
     }
 
-    private void _makeSelection() {
+    public void _makeSelection() {
         getSelectionModel().clearSelection();
         _selectedIndices.forEach(index -> getSelectionModel().select(index));
     }

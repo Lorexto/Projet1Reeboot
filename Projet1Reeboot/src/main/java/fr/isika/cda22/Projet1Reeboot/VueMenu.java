@@ -1,5 +1,6 @@
 package fr.isika.cda22.Projet1Reeboot;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.lang.reflect.Array;
@@ -12,6 +13,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ArrayChangeListener;
 import javafx.collections.FXCollections;
@@ -26,9 +28,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
@@ -47,7 +52,7 @@ public class VueMenu extends Scene {
 	StackPane listeStagiaires;
 	Button search;
 	Button addButton;
-	Button delete;
+	static Button delete;
 	Button refactor;
 	Button disconnect;
 	Button refresh;
@@ -65,8 +70,8 @@ public class VueMenu extends Scene {
   ///////////////////////////////////////////////////                
 
 	
-	public VueMenu()  {
-		super(new GridPane(),800,600);
+	public VueMenu() throws EOFException  {
+		super(new GridPane(),800,800);
 		GridPane root = (GridPane)this.getRoot();
 		
 ////////////////////////////////////////////////////
@@ -84,8 +89,14 @@ public class VueMenu extends Scene {
 		ConteneurBoutons.getChildren().add(1, addButton);
 		ConteneurBoutons.getChildren().add(2, delete);
 		ConteneurBoutons.getChildren().add(3, refactor);
-	//	ConteneurBoutons.getChildren().add(4, disconnect);
-		searchBar= new TextField();    
+		ConteneurBoutons.getChildren().add(4, disconnect);
+		searchBar= new TextField(); 
+		
+		
+		
+		
+		
+		
 //////////////////////////////////////////////////////////
 ////// TABLE VIEW SET UP//////////
 /////////////////////////////////////////////////////////   
@@ -93,6 +104,7 @@ public class VueMenu extends Scene {
         final Label label = new Label("Liste des stagiaires");
         label.setFont(new Font("Arial", 20));
         table.setEditable(true);
+        table.setMaxSize(700, getHeight());
         TableColumn<Stagiaire, String> nomCol = new TableColumn<>("Nom");
         nomCol.setMinWidth(100);
         nomCol.setCellValueFactory(new PropertyValueFactory<>("nom"));
@@ -156,6 +168,29 @@ public class VueMenu extends Scene {
 			});
 			
 		});
+/////////////////////////////////////TABLEVIEW SELECTOR/////////////////////////        
+        table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        
+//        table.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Stagiaire>() ->{
+//        	public void changed(ObservableValue<? extends Stagiaire> observable, Stagiaire oldValue, String newValue) {
+//                //Check whether item is selected and set value of selected item to Label
+//                if(table.getSelectionModel().getSelectedItem() != null) 
+//                {    
+//                   TableViewSelectionModel<Stagiaire> selectionModel = table.getSelectionModel();
+//                   ObservableList<Stagiaire> selectedCells = selectionModel.getSelectedCells();
+//                   TablePosition<Object, ?> tablePosition = (TablePosition<Object, ?>) selectedCells.get(0);
+//                   Stagiaire Stag = (Stagiaire) tablePosition.getTableColumn().getCellData(newValue);
+//                   System.out.println("stagiaire selectionne"+Stag.getNom());
+//                 }
+//                 }
+//
+//			
+//			
+//             });
+//        
+        
+        
+        
 ////////////////////////////AJOUT ELEMENTS DANS LE TAABLE VIEW////////////////////////////////
         SortedList<Stagiaire> ResultatsTris= new SortedList<>(listFilt);
 		ResultatsTris.comparatorProperty().bind(table.comparatorProperty());
@@ -170,7 +205,12 @@ public class VueMenu extends Scene {
 	    root.add(refresh,8,4);
 	    root.add(disconnect, 8, 9);
 	    root.add(searchBar, 10, 7);
-	    root.add(search, 9, 7);
+	   
+	    
+	    
+	    
+	    
+///////FIN Config	    
 	}
 
 
@@ -181,17 +221,18 @@ public class VueMenu extends Scene {
 /////////////////////////////////////////////////////////////////////////	
 ////////////////CREATION OBSERVABLE LIST VIA FICHIER BIN////////////	
 //////////////////////////////////////////////////////////////////////////	
-		public static ObservableList<Stagiaire> getContactList() {
-
-			Stagiaire st1 = new Stagiaire("LACROIX","Kim", "CDA", "98", "2012");
-			Stagiaire st2 = new Stagiaire("CHAVENEAU","Alex","AL", "98","2012");
+		public static ObservableList<Stagiaire> getContactList() throws EOFException {
+//
+//			Stagiaire st1 = new Stagiaire("LACROIX","Kim", "CDA", "98", "2012");
+//			Stagiaire st2 = new Stagiaire("CHAVENEAU","Alex","AL", "98","2012");
 			Stagiaire st3 = new Stagiaire("BON","Jean","AL", "38", "2014");
-			ObservableList<Stagiaire> list = FXCollections.observableArrayList(st1,st2,st3);
+			ObservableList<Stagiaire> list = FXCollections.observableArrayList(st3);
 
 			try {
 			RandomAccessFile raf = new RandomAccessFile("src/main/java/fr/isika/cda22/Projet1Reeboot/fichbinTEST3.bin", "rw");
 			for (int i=0; i<(int)raf.length()/132; i++) {
-				Noeud3 n = new Noeud3();
+			
+				//Noeud3 n = new Noeud3();
 				Noeud3 nCourant = Noeud3.lireParentSuivant(i, raf);
 				String nom = nCourant.getCle().getNomLong().split("\\*")[0];
 				String prenom = nCourant.getCle().getPrenomLong().split("\\*")[0];
@@ -199,7 +240,9 @@ public class VueMenu extends Scene {
 				String dpt = nCourant.getCle().getDpt().split("\\*")[0];
 				String annee = nCourant.getCle().getAnnee().split("\\*")[0];
 				Stagiaire newSt = new Stagiaire(nom, prenom, id, dpt, annee);
+				if(nCourant.getNumeroNoeud()>=0 ) {
 				list.add(newSt);
+				}
 			}
 
 		    return list;
@@ -216,8 +259,7 @@ public class VueMenu extends Scene {
 /////////////////////////////////////////////////////////////////////////////////////////		
 		private static boolean searchStagiairesOrder(Stagiaire stagiaire, String searchText){
 		    return (stagiaire.getNom().toLowerCase().contains(searchText.toLowerCase())) ||
-		            (stagiaire.getPrenom().toLowerCase().contains(searchText.toLowerCase()));
-		            
+		            (stagiaire.getPrenom().toLowerCase().contains(searchText.toLowerCase()));   
 		}
 
 		
@@ -228,9 +270,16 @@ public class VueMenu extends Scene {
 		    }
 		    return FXCollections.observableList(filteredList);
 		}
+///////////////////////////////////////////
+		
+		 private void deleteButtonClicked() {
+		        table.getItems().removeAll(
+		                table.getSelectionModel().getSelectedItems()
+		        );
+		    }		
 
 		
-
+		
 //////////////////////////////////////////////////
 /////////GETTERS ET SETTERS/////////////		
 /////////////////////////////////////////////////

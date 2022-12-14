@@ -39,11 +39,15 @@ public class Lanceur3 {
                   // n.SupprimerNoeudStagiaireV2( n.searchInBinFile(raf, "AUGEREAU"), raf);
                   LectureBin.LectureBin();
                   
-                  Stagiaire Paul= new Stagiaire("HAHAHA", "Paul", "33", "CDA22", "2008");
-                  System.out.println(raf.length());
-                  Noeud3 nPaul= new Noeud3(Paul, -1, -1, -1, ((int)raf.length()/TAILLE_NOEUD));
-                  Noeud3.ajouterStagiaire(nPaul,(Noeud3.lireParentSuivant(0, raf)) , raf);
-                  LectureBin.LectureBin();
+//                  Stagiaire Paul= new Stagiaire("HAHAHA", "Paul", "33", "CDA22", "2008");
+//                  System.out.println(raf.length());
+//                  Noeud3 nPaul= new Noeud3(Paul, -1, -1, -1, ((int)raf.length()/TAILLE_NOEUD));
+//                  Noeud3.ajouterStagiaire(nPaul,(Noeud3.lireParentSuivant(0, raf)) , raf);
+//                  LectureBin.LectureBin();
+                 // n.SupprimerNoeudStagiaireV2(nPaul, raf);
+                  //Noeud3.lireParentSuivant(0, raf);
+                  
+                 //LectureBin.LectureBin();
                   //LectureBin.LectureBinSansLesSupprimes();
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -64,6 +68,7 @@ public class Lanceur3 {
 			Noeud3 n = null;
 			Noeud3 nParent = null;
 			Arbre3 a = new Arbre3();
+			
 			File file= new File("src/main/java/fr/isika/cda22/Projet1Reeboot/TestStagiairesdizaine.txt");
 			FileReader fr = new FileReader(file);
 			BufferedReader br = new BufferedReader(fr);

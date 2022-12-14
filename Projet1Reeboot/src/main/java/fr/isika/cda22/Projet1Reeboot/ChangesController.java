@@ -55,11 +55,12 @@ private Object label;
 		RandomAccessFile raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet1Reeboot/fichbinTEST3.bin", "rw");
 		 nom=VueFormulaire.txtNom.getText();
 		prenom=VueFormulaire.txtPrenom.getText();
+				//substring(0, 1).toUpperCase() + prenom.substring(1);
 		 dpt= VueFormulaire.txtDepartement.getText();
 		id= VueFormulaire.txtPromo.getText();
 		annee=VueFormulaire.txtAnnee.getText();
 		
-		Stagiaire nouveau= new Stagiaire(nom, prenom, dpt, id, annee);
+		Stagiaire nouveau= new Stagiaire(nom.toUpperCase(), prenom.substring(0, 1).toUpperCase() + prenom.substring(1), dpt, id, annee);
 
 		Noeud3 nvo= new Noeud3(nouveau, -1, -1, -1,( (int)raf.length()/Noeud3.TAILLE_NOEUD));
 		Noeud3.ajouterStagiaire(nvo,(Noeud3.lireParentSuivant(0, raf)) , raf);
@@ -80,8 +81,6 @@ private Object label;
 	
 ////////////////////////////////////AJOUT OUVERTURE PAGE FORMULAIRE///////////////////////////
 	public static boolean Ajouter( EventHandler<? super MouseEvent> eventHandler) throws IOException{
-		
-		
 		
 		return true;
 
@@ -132,13 +131,30 @@ public  static boolean Deconnexion( EventHandler<? super MouseEvent> eventHandle
 
 public static boolean Delete( EventHandler<? super MouseEvent> eventHandler) throws IOException{
 	
+	RandomAccessFile raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet1Reeboot/fichbinTEST3.bin", "rw");
 	
+	Stagiaire selection= VueMenu.table.getSelectionModel().getSelectedItem();
+	System.out.println(VueMenu.table.getSelectionModel().getSelectedItem());
+	System.out.println(selection.getNom());
+		Noeud3 aEffacer =	Noeud3.searchInBinFile(raf, selection.getNom().toUpperCase());	
+		Noeud3.SupprimerNoeudStagiaireV2(aEffacer, raf) ;	
+		
 	
-	return false;
+	return true;
+	
 	
 }
 
-
+/////////////////////////////////////////////////////////////////////
+/////////////////////// RETOUR//////////////////////
+////////////////////////////////////////////////////////////////////
+public static boolean Retour( EventHandler<? super MouseEvent> eventHandler) throws IOException{
+	
+	
+	
+	return true;
+	
+}
 
 
 
