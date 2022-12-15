@@ -73,7 +73,7 @@ public class VueMenu extends Scene {
 	public VueMenu() throws EOFException  {
 		super(new GridPane(),800,800);
 		GridPane root = (GridPane)this.getRoot();
-		
+		root.setPadding(new Insets(40, 40, 40, 40));
 ////////////////////////////////////////////////////
 ////////////BOUTONS et FIELDS
 ///////////////////////////////////////////////////		
@@ -89,8 +89,9 @@ public class VueMenu extends Scene {
 		ConteneurBoutons.getChildren().add(1, addButton);
 		ConteneurBoutons.getChildren().add(2, delete);
 		ConteneurBoutons.getChildren().add(3, refactor);
-		ConteneurBoutons.getChildren().add(4, disconnect);
-		searchBar= new TextField(); 
+		
+		searchBar= new TextField();
+		searchBar.setPromptText("Recherche");
 		
 		
 //////////////////////////////////////////////////////////
@@ -122,7 +123,7 @@ public class VueMenu extends Scene {
 ////////////////////////////////////////////////////////////////////////////////                
         TextField filterField= new TextField();
         list=getContactList();
-        listFilt = new FilteredList<Stagiaire>(list,e->true);
+        listFilt = new FilteredList<Stagiaire>(list,p->true);
         filterField.textProperty().addListener((observable, oldValue, newValue) -> {
         	listFilt.setPredicate(stagiaire -> {
 				// Isi fitre vide on affiche toute la liste
@@ -149,13 +150,13 @@ public class VueMenu extends Scene {
 					}
 					String lowerCaseFilter= newValue.toLowerCase();
 
-						if(stagiaire.getNom().toLowerCase().contains(lowerCaseFilter)) {
+						if(stagiaire.getNom().toLowerCase().indexOf(lowerCaseFilter)>-1) {
 							return true;
 						}				
-						else if(stagiaire.getPrenom().toLowerCase().contains(lowerCaseFilter)) {
+						else if(stagiaire.getPrenom().toLowerCase().indexOf(lowerCaseFilter)>-1) {
 							return true;
 						}
-						else if(stagiaire.getId().toLowerCase().contains(lowerCaseFilter)){
+						else if(stagiaire.getId().toLowerCase().indexOf(lowerCaseFilter)>-1){
 							return true;
 						}
 					
@@ -165,23 +166,29 @@ public class VueMenu extends Scene {
 			
 		});
 /////////////////////////////////////TABLEVIEW SELECTOR/////////////////////////        
-        table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        
-        
-////////////////////////////AJOUT ELEMENTS DANS LE TAABLE VIEW////////////////////////////////
+        table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         SortedList<Stagiaire> ResultatsTris= new SortedList<>(listFilt);
-		ResultatsTris.comparatorProperty().bind(table.comparatorProperty());
+        ResultatsTris.comparatorProperty().bind(table.comparatorProperty());
+////////////////////////////AJOUT ELEMENTS DANS LE TAABLE VIEW////////////////////////////////
+       
+		
 		table.setItems(ResultatsTris);
+		
         VBox vbox = new VBox();
         vbox.setSpacing(5);
-        vbox.setPadding(new Insets(20, 20, 20, 20));
-
+        vbox.setPadding(new Insets(20, 100, 100, 120));
+        vbox.getChildren().add(ConteneurBoutons);
+        vbox.getChildren().add(searchBar);
+        vbox.getChildren().add(table);
+        
+        HBox basDePage= new HBox();
+        basDePage.getChildren().add(disconnect);
        //AJOUT ELEMENTS DANS ROOT
-		root.add(ConteneurBoutons,1,2);
-		root.add(table, 1, 4);
-	    root.add(refresh,8,4);
-	    root.add(disconnect, 8, 9);
-	    root.add(searchBar, 10, 7);
+		//root.add(ConteneurBoutons,1,2);
+		//root.add(table, 1, 4);
+	    root.add(vbox,1,1);
+	    root.add(refresh, 1, 3);
+	    root.add(basDePage, 2, 3);
 	   
 	    
 	    
@@ -219,8 +226,8 @@ public class VueMenu extends Scene {
 				Stagiaire newSt = new Stagiaire(nom, prenom, dpt, id, annee);
 				if(nCourant.getNumeroNoeud()>=0 ) {
 				list.add(newSt);
-				
 				}
+				
 			}
 
 		    return list;

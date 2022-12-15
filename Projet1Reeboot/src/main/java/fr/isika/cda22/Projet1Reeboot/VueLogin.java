@@ -18,14 +18,14 @@ public class VueLogin extends Scene {
 
 	public VueLogin() {
 
-		super(new GridPane(),800,800);
+		super(new GridPane(),600,200);
 		GridPane rootLogin= (GridPane)this.getRoot();
 
 
 
-		Label FenetreAuth= new Label (" VEUILLEZ VOUS CONNCETER");
-		Label USERID=new Label("Votre Identifiant");
-		Label USERMDP=new Label("Votre Mot De Passe");
+		Label FenetreAuth= new Label (" VEUILLEZ VOUS CONNECTER");
+		Label USERID=new Label("Identifiant");
+		Label USERMDP=new Label("Mot de passe");
 
 		User_ID=new TextField();
 		mdp_User=new PasswordField();
@@ -44,20 +44,20 @@ public class VueLogin extends Scene {
 
 
 
-	    Utilisateur.setSpacing(60);
-	    MotDePasse.setSpacing(60);
+	    Utilisateur.setSpacing(10);
+	    MotDePasse.setSpacing(10);
 
 	    rootLogin.add(FenetreAuth,3,1);
 	    rootLogin.add(Utilisateur,2,4);
-	    rootLogin.add(MotDePasse,2,7 );
-	    rootLogin.add(submit,4,10);
+	    rootLogin.add(MotDePasse,2,5 );
+	    rootLogin.add(submit,4,6);
 
 
 
 
 	    rootLogin.setPadding(new Insets(5));
-	    rootLogin.setHgap(20);
-	    rootLogin.setVgap(40);
+	    rootLogin.setHgap(10);
+	    rootLogin.setVgap(10);
 
 
 

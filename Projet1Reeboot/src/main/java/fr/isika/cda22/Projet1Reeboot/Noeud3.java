@@ -118,7 +118,23 @@ public class Noeud3 {
 //////////////////////////////////////////////////////////////////////////
 //////////////////////AJOUT STAGIAIRE DANS BIN/////////
 ///////////////////////////////////////////////////////////////////////////
-
+	/**
+	 * ajoute un noeud contenant un nouveau stagiaire, dont on initialise les
+	 * indices FG, FD, DBL à -1, -1, -1, nième noeud. pour cela, la méthode
+	 * recherche la position du nouveau noeud dans l'arbre. Une fois identifiée sa
+	 * position par rapport aux autres noeuds, la méthode mets à jour l'indice FG ou
+	 * FD de son parent avec le numero du noeud ajouté.
+	 *
+	 * @param n       le noeud passé avec la clé du stagiaire et les indices -1, -1,
+	 *                -1, nième noeud. On déclare donc en amont Noeud3 n = new
+	 *                Noeud3(nouveauStagiaire, -1, -1, -1);
+	 * @param nParent est le noeud avec lequel le noeud courant à ajouter va être
+	 *                comparé. Il est initialisé à la racine de l'arbre. Comme on
+	 *                est dans un fichier binaire, on l'initialise en lisant le
+	 *                premier élément : Noeud3 nParent = lireParentSuivant(0, raf);
+	 * @param raf     le fichier binaire dans lequel on stocke nos données sous
+	 *                forme d'arbre abstrait.
+	 */ 
 	public static void ajouterStagiaire(Noeud3 n, Noeud3 nParent,RandomAccessFile raf) throws FileNotFoundException, EOFException {
 
 		File fileBIN= new File ("src/main/java/fr/isika/cda22/Projet1Reeboot/fichbinTEST3.bin");

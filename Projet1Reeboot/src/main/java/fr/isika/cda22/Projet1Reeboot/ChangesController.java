@@ -57,30 +57,37 @@ private Object label;
 			&&annee!= ""
 		) {
 		RandomAccessFile raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet1Reeboot/fichbinTEST3.bin", "rw");
-		 nom=VueFormulaire.txtNom.getText();
+		 nom=VueFormulaire.txtNom.getText().trim();
+		 nom=nom.toUpperCase();
 		prenom=VueFormulaire.txtPrenom.getText();
-				//substring(0, 1).toUpperCase() + prenom.substring(1);
-		 dpt= VueFormulaire.txtDepartement.getText();
-		id= VueFormulaire.txtPromo.getText();
-		annee=VueFormulaire.txtAnnee.getText();
 		
-		Stagiaire nouveau= new Stagiaire(nom.toUpperCase(), prenom.substring(0, 1).toUpperCase() + prenom.substring(1), dpt, id, annee);
-
-		Noeud3 nvo= new Noeud3(nouveau, -1, -1, -1,( (int)raf.length()/Noeud3.TAILLE_NOEUD));
+		prenom= prenom.substring(0, 1).toUpperCase() + prenom.substring(1);
+		 dpt= VueFormulaire.txtDepartement.getText();
+		id= VueFormulaire.txtPromo.getText().trim();
+		annee=VueFormulaire.txtAnnee.getText().trim();
+		
+		Stagiaire nouveau= new Stagiaire(nom, prenom, dpt, id, annee);
+System.out.println(nouveau.getNom());
+		Noeud3 nvo= new Noeud3(nouveau, -1, -1, -1,( (int)raf.length()/132));
+		System.out.println(nvo.getFilsGauche());
+		System.out.println(nvo.getFilsDroit());
+		System.out.println(nvo.getDoublon());
+		System.out.println(nvo.getNumeroNoeud());
 		Noeud3.ajouterStagiaire(nvo,(Noeud3.lireParentSuivant(0, raf)) , raf);
 		
 		LectureBin.LectureBin();
 		VueMenu.table.refresh();
+		return true;}
 		return true;
-		}
-		else {
-			System.out.println("Veuillez entrer des donnees correctes");
-            Alert msg = new Alert(AlertType.WARNING);
-            msg.setTitle("Informations incompletes");
-            msg.setContentText("Veuillez remplir TOUS les champs, ou retournez au menu principal");
-            msg.showAndWait();
-			return false;
-		}
+		
+//		else {
+//			System.out.println("Veuillez entrer des donnees correctes");
+//            Alert msg = new Alert(AlertType.WARNING);
+//            msg.setTitle("Informations incompletes");
+//            msg.setContentText("Veuillez remplir TOUS les champs, ou retournez au menu principal");
+//            msg.showAndWait();
+//			return false;
+//		}
 	}
 	
 ////////////////////////////////////AJOUT OUVERTURE PAGE FORMULAIRE///////////////////////////
@@ -148,6 +155,7 @@ public static boolean Delete( EventHandler<? super MouseEvent> eventHandler) thr
 	System.out.println(selection.getNom());
 	Noeud3 aEffacer =Noeud3.searchInBinFile(raf, selection.getNom().toUpperCase());	
 	Noeud3.SupprimerNoeudStagiaireV2(aEffacer, raf) ;	
+	LectureBin.LectureBin();
 	raf.close();
 	return true;}
 	
@@ -176,10 +184,9 @@ public static boolean Retour( EventHandler<? super MouseEvent> eventHandler) thr
 /////////////////////// MODIFICATION STAGIAIRES : OVERTURE FENETRE/////////////
 ////////////////////////////////////////////////////////////////////
 public static boolean Modifications( EventHandler<? super MouseEvent> eventHandler) throws IOException{
-
-	if(VueMenu.table.getSelectionModel().isEmpty()!=true)  {
-	
 	Stagiaire selection= VueMenu.table.getSelectionModel().getSelectedItem();
+	
+	if(VueMenu.table.getSelectionModel().isEmpty()!=true){
 	VueModification.labelNom.setText(String.valueOf( selection.getNom()));     
 	VueModification.labelPrenom.setText(String.valueOf( selection.getPrenom()));
 	VueModification.labelDepartement.setText(String.valueOf( selection.getDpt()));
@@ -188,13 +195,18 @@ public static boolean Modifications( EventHandler<? super MouseEvent> eventHandl
 RandomAccessFile raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet1Reeboot/fichbinTEST3.bin", "rw");
 
 System.out.println(VueMenu.table.getSelectionModel().getSelectedItem());
-System.out.println(selection.getNom());
-
+System.out.println(selection.getNom());	
 	return true;}
-	return true;
 	
-	
-	
+	else {
+		Alert msg = new Alert(AlertType.WARNING);
+	    msg.setTitle("ATTENTION");
+	    msg.setContentText("Vous n'avez pas modifié les informations relatives a ce stagiaire");
+	    msg.showAndWait();
+	    Optional<ButtonType> option = msg.showAndWait();
+		
+		return false;
+	}
 }
 /////////////////////////////////////////////////////////////////////
 /////////////////////// MODIFICATION STAGIAIRES DANS BIN/////////////
@@ -202,16 +214,17 @@ System.out.println(selection.getNom());
 public static boolean SubmitChanges( EventHandler<? super MouseEvent> eventHandler) throws IOException{
 	
 RandomAccessFile raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet1Reeboot/fichbinTEST3.bin", "rw");
-
+// stagiaire selectionne
 Stagiaire selection= VueMenu.table.getSelectionModel().getSelectedItem();
 
+// textfields de vue modification
 String nom = VueModification.getTxtNomR().getText().toUpperCase();
 String prenom=VueModification.getTxtPrenomR().getText();
 String dpt=VueModification.getTxtDepartementR().getText();
 String id=VueModification.getTxtPromoR().getText();
 String annee=VueModification.getTxtAnneeR().getText();
 
-if(nom=="") {
+if(nom=="") { // si vide recupere donnees du stagiaire selectionne
 	nom= selection.getNom();
 }
 if(prenom=="") {
@@ -227,16 +240,23 @@ if(id=="") {
 if(annee=="") {
 	annee= selection.getAnnee();
 }
-
-
+// stagiaire de remplacement
 Stagiaire Remplacement= new Stagiaire(nom, prenom, dpt, id, annee);
+// on recherche le noeud d'origine a remplacer
+Noeud3 aEffacer =Noeud3.searchInBinFile(raf, selection.getNom());
 
-Noeud3 aEffacer =	Noeud3.searchInBinFile(raf, selection.getNom());
-if (aEffacer.getCle()!=Remplacement) {
+if (aEffacer.getCle()!=Remplacement) {// si les cles sont differentes
 	
-Noeud3 Nremplacement= new Noeud3(Remplacement, -1, -1, -1, (int)raf.length()/132);
-Noeud3.ajouterStagiaire(Nremplacement, Noeud3.lireParentSuivant(0, raf), raf);
-Noeud3.SupprimerNoeudStagiaireV2(aEffacer, raf);
+Noeud3 Nremplacement= new Noeud3(Remplacement, -1, -1, -1, (int)raf.length()/132);// creation du noeud de remplacement
+Noeud3.ajouterStagiaire(Nremplacement, Noeud3.lireParentSuivant(0, raf), raf);//on ajoute le stagiaire
+Noeud3.SupprimerNoeudStagiaireV2(aEffacer, raf);// on supprime l'ancien noeud
+LectureBin.LectureBin();
+raf.seek(0);
+VueModification.getTxtNomR().clear();
+VueModification.getTxtPrenomR().clear();
+VueModification.getTxtDepartementR().clear();
+VueModification.getTxtPromoR().clear();
+VueModification.getTxtAnneeR().clear();
 VueMenu.table.refresh();
 return true;
 }
@@ -247,7 +267,7 @@ else {
     msg.showAndWait();
     Optional<ButtonType> option = msg.showAndWait();
 	
-	return true;
+	return false;
 }
 
 }
